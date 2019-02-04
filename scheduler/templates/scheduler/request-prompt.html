@@ -1,0 +1,25 @@
+{% include "scheduler/base.html" %}
+{% include "scheduler/menu.html" %}
+
+<body class="requests">
+    <div class="container make-full-page">
+        <div class="row">
+            <div class="col-xs-12 text-center">
+                <h4 class="sub-page-title page-top">What type of request would you like to create?</h4>
+            </div><!--col-->
+            <div class="col-xs-12 text-center">
+                <form action="{% url 'scheduler:vacation-request' %}">
+                    <input type="submit" class="submit-button" value="Vacation Request"></input>
+                </form>
+                <form action="{% url 'scheduler:shift-request' %}">
+                    <input type="submit" class="submit-button" value="Shift Request"></input>
+                </form>
+                <form action="{% url 'scheduler:recurring-shift-request' %}">
+                    <input type="submit" class="submit-button" value="Recurring Shift Request"></input>
+                </form>
+            </div><!--col-->
+        </div><!--row-->
+    </div><!--container-->
+</body>
+
+{% include "scheduler/footer.html" %}

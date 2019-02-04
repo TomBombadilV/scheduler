@@ -1,0 +1,43 @@
+{% include "scheduler/base.html" %}
+{% include "scheduler/menu.html" %}
+
+<body class="requests">
+    <div class="container make-full-page">
+        <div class="row">
+            <div class="col-xs-12 center-block text-center">
+                <div class="model-form-background">
+                    <div class="col-xs-12 text-center">
+                        <h4 class="sub-page-title page-top">New Recurring Shift Request</h4>
+                    </div><!--col-12-->
+                    <div class="col-xs-12 model-form text-center center-block">
+                        <form action="{% url 'scheduler:recurring-shift-request' %}" method="POST">
+                        {% csrf_token %}
+                            <div class="row">
+                                <div class="col-xs-12 text-center">
+                                    <label for="id_employee" class="input-label-padding">Employee: </label> {{ form.employee }}
+                                </div> 
+                            </div><!--row-->
+                            <div class="row">
+                                <div class="col-xs-12 text-center">
+                                    <label for="id_weekDay">Weekday: </label> {{ form.weekDay }}
+                                </div><!--col-->
+                            </div><!--row-->
+                            <div class="row">
+                                <div class="col-xs-12 text-center">
+                                    <label for="id_shift">Shift: </label> {{ form.shift }}
+                                </div><!--col-->
+                            </div><!--row-->
+                            <div class="row">
+                                <div class="col-xs-12 text-center button-row">
+                                    <input class="submit-button small-submit-button" type="submit" value="Create" />
+                                </div><!--col-->
+                            </div><!--row-->
+                        </form>
+                    </div><!--col-->
+                </div><!--model-form-background-->
+            </div><!--col-12-->
+        </div><!--row-->
+    </div><!--container-->
+</body>
+
+{% include "scheduler/footer.html" %}

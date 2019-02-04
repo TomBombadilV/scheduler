@@ -1,0 +1,150 @@
+{% include "scheduler/base.html" %}
+{% include "scheduler/menu.html" %}
+{% load staticfiles %}
+<!--<script src="{% static 'js/jquery.weekpicker.js' %}"></script>-->
+<script src="{% static 'js/weekPicker.js' %}"></script>
+<link href="https://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/flick/jquery-ui.css">
+
+<body class="generate">
+    <div class="container make-full-page">
+        <div class="row">
+            <div class="col-xs-12 center-block text-center">
+                <h1 class="page-title">Create Schedule</h1>
+            </div><!--col-->
+        </div><!--row-->
+        <div class="row">
+            <!--<p>For the week of: <input type="week" /></p>-->
+            <form id="generate-form" action="{% url 'scheduler:index' %}" method="post">
+            {% csrf_token %}    
+                <div class="row">
+                    <div id="week-div" class="col-xs-12 center-block text-center">
+                        <label for="id_currentWeek">For the week of </label>
+                        {{ form.currentWeek }}
+                    </div><!--col-12-->
+                </div><!--row-->
+                <div class="meeting-div sub-div">
+                    <div class="row">
+                        <div class="col-xs-12 center-block">
+                            <h4 class="subtitle">Staff Meetings</h4>
+                            <div class="col-xs-6">
+                                {{ form.coreGroupMeeting }}
+                                <label for="id_coreGroupMeetingDay">Core Group Meeting: </label>
+                                {{ form.coreGroupMeetingDay }}
+                            </div><!--col-6-->
+                            <div class="col-xs-6">
+                                <div class="row">
+                                    <div class="col-xs-1">
+                                        {{ form.staffMeeting }}
+                                    </div><!--col-1-->
+                                    <div class="col-xs-10">
+                                        <ul>
+                                            <li><label for="id_staffMeetingI">Staff Meeting I: </label> {{ form.staffMeetingI }}</li>
+                                            <li><label for="id_staffMeetingII">Staff Meeting II: </label> {{ form.staffMeetingII }}</li>
+                                        </ul>
+                                    </div><!--col-10-->
+                                </div><!--row-->
+                            </div><!--col-6-->
+                        </div><!--col-12-->
+                    </div><!--row-->
+                </div><!--meeting-div-->
+                <div class="meeting-div sub-div">
+                    <div class="row">
+                        <div class="col-xs-12 center-block">
+                            <h4 class="subtitle">Quad Meetings</h4>
+                            <div class="col-xs-6">
+                                <ul>
+                                    <li>{{ form.quadOneMeeting }}<label for="id_quadOneMeetingDay">Quad One: </label> {{ form.quadOneMeetingDay }}</li>
+                                    <li>{{ form.quadTwoMeeting }}<label for="id_quadTwoMeetingDay">Quad Two: </label> {{ form.quadTwoMeetingDay }}</li>
+                                </ul>
+                            </div>
+                            <div class="col-xs-6">
+                                <ul>
+                                        <li>{{ form.quadThreeMeeting }}<label for="id_quadThreeMeetingDay">Quad Three: </label> {{ form.quadThreeMeetingDay }}</li>
+                                        <li>{{ form.quadFourMeeting }}<label for="id_quadFourMeetingDay">Quad Four: </label> {{ form.quadFourMeetingDay }}</li>
+                                </ul>
+                            </div>
+                        </div><!--col-12-->
+                    </div><!--row-->    
+                </div><!--meeting-div-->       
+                <!--<h3>Active Schedule Requests</h3>-->
+                <br/>
+                <div class="row">
+                    <div class="col-xs-12 center-block text-center">
+                        <input id="generate-button" class="submit-button" type="submit" value="Generate"/>
+                    </div><!--col-12-->
+                </div><!--row-->
+            </form>
+        </div><!--row-->
+    </div><!--container-->
+</body>
+{% include "scheduler/footer.html" %}
+
+<script>
+        $('#id_coreGroupMeeting').on('change',function(e){
+            if ($(this).is(':checked')){
+                $('#id_coreGroupMeetingDay').removeAttr('disabled');
+            }else{
+                $('#id_coreGroupMeetingDay').attr('disabled','disabled');
+            }
+        });
+
+        $('#id_staffMeeting').on('change',function(e){
+            if ($(this).is(':checked')){
+                $('#id_staffMeetingI').removeAttr('disabled');
+                $('#id_staffMeetingII').removeAttr('disabled');
+            }else{
+                $('#id_staffMeetingI').attr('disabled','disabled');
+                $('#id_staffMeetingII').attr('disabled','disabled');
+            }
+        });
+
+        $('#id_quadOneMeeting').on('change',function(e){
+            if ($(this).is(':checked')){
+                $('#id_quadOneMeetingDay').removeAttr('disabled');
+            }else{
+                $('#id_quadOneMeetingDay').attr('disabled','disabled');
+            }
+        });
+
+        $('#id_quadTwoMeeting').on('change',function(e){
+            if ($(this).is(':checked')){
+                $('#id_quadTwoMeetingDay').removeAttr('disabled');
+            }else{
+                $('#id_quadTwoMeetingDay').attr('disabled','disabled');
+            }
+        });
+
+        $('#id_quadThreeMeeting').on('change',function(e){
+            if ($(this).is(':checked')){
+                $('#id_quadThreeMeetingDay').removeAttr('disabled');
+            }else{
+                $('#id_quadThreeMeetingDay').attr('disabled','disabled');
+            }
+        });
+
+        $('#id_quadFourMeeting').on('change',function(e){
+            if ($(this).is(':checked')){
+                $('#id_quadFourMeetingDay').removeAttr('disabled');
+            }else{
+                $('#id_quadFourMeetingDay').attr('disabled','disabled');
+            }
+        });
+
+        $('#generate-form').submit(function(){
+            $("#generate-form :disabled").removeAttr('disabled');
+        });
+
+        convertToWeekPicker($("#id_currentWeek"));
+
+        // Default calendar date is the Monday of this week
+        var today = new Date();
+        today = getMonday(today);
+        month = ('0'+ (today.getMonth()+1)).slice(-2);
+        day = ('0'+today.getDate()).slice(-2);
+        year = today.getFullYear().toString().substr(2);
+        today = month+'/'+day+'/'+year
+        $("#id_currentWeek").val(today)
+        
+</script>

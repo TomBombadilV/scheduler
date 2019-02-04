@@ -1,0 +1,35 @@
+{% include "scheduler/base.html" %}
+{% include "scheduler/menu.html" %}
+{% load staticfiles %}
+
+<link href="https://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/flick/jquery-ui.css">
+
+<body class="requests">
+    <div class="container make-full-page">
+        <div class="row">
+            <div class="col-xs-12 text-center">
+                <h4 class="sub-page-title page-top">Edit Vacation Request</h4>
+            </div><!--col-->
+            <div class="col-xs-12 text-center">
+                <form method="POST">
+                {% csrf_token %}
+                    <label for="id_employee">Employee: </label>{{ form.employee }}
+                    <label for="id_startDate">Start Date: </label>{{ form.startDate }}
+                    <label for="id_endDate">End Date: </label>{{ form.endDate }}
+                    <input type="submit" value="Update" />
+                </form>
+            </div><!--col-->
+        </div><!--row-->
+    </div><!--container-->
+</body>
+
+{% include "scheduler/footer.html" %}
+
+<script>
+    $("#id_startDate").datepicker({firstDay:1});
+    $('#id_endDate').datepicker({firstDay:1});
+    $("#id_startDate").attr("autocomplete", "off");
+    $("#id_endDate").attr("autocomplete", "off");
+</script>

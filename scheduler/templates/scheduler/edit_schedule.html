@@ -1,0 +1,48 @@
+{% include "scheduler/base.html" %}
+{% include "scheduler/menu.html" %}
+
+<body class="schedules">
+    <div class="container make-full-page">
+        <form method="POST">
+        {% csrf_token %}
+            {{ formset.management_form }}
+            <div class="row">
+                <div class="col-xs-12">
+                    <h4 class="subtitle center-block text-center">Edit Schedule for the Week of {{ date | date:'M d, Y'}}</h4>
+                    <table class="schedule-table">
+                        <thead>
+                            <th>Employee</th>
+                            <th>Monday</th>
+                            <th>Tuesday</th>
+                            <th>Wednesday</th>
+                            <th>Thursday</th>
+                            <th>Friday</th>
+                            <th>Saturday</th>
+                            <th>Sunday</th>
+                        </thead>
+                    {% for form in formset %}
+                        <tr>
+                            {{ form.id }}
+                            <td class="read-only-field">{{ form.employee }}</td>
+                            <td>{{ form.mondayShift }}</td>
+                            <td>{{ form.tuesdayShift }}</td>
+                            <td>{{ form.wednesdayShift }}</td>
+                            <td>{{ form.thursdayShift }}</td>
+                            <td>{{ form.fridayShift }}</td>
+                            <td>{{ form.saturdayShift }}</td>
+                            <td>{{ form.sundayShift }}</td>
+                        </tr>
+                    {% endfor %}
+                    </table>
+                </div><!--col-12-->
+            </div><!--row-->
+            <div class="row">
+                <div class="col-xs-12 center-block text-center">
+                    <button type="submit" class="submit-button" onclick="return confirm('Warning: Saving these changes will override all shift/vacation requests and other constraints. Continue saving?');">Save Changes</button>
+                </div><!--col-12-->
+            </div><!--row-->
+        </form>
+    </div>
+</body>
+
+{% include "scheduler/footer.html" %}

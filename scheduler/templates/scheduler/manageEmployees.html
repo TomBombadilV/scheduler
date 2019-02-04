@@ -1,0 +1,158 @@
+{% include "scheduler/base.html" %}
+{% include "scheduler/menu.html" %}
+
+<body class="employees">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 center-block text-center">
+                <h1 class="page-title">Manage &nbsp;Employees</h1>
+            </div><!--col-->
+        </div><!--row-->
+        <div class="row">
+            <div id="message-div">
+                {% if messages %}
+                <ul class="messages">
+                    {% for message in messages %}
+                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
+        </div><!--row-->
+        <div class="employee-div sub-div">
+            <div class="row">
+                <div class="col-xs-12 center-block">
+                    <h4 class="subtitle">Employees</h4>
+                </div><!--col-12-->
+                {% if employee_list %}
+                <div class="col-xs-12">
+                    <table id="employee-table">
+                        <thead>
+                            <th>Last Name</th>
+                            <th>First Name</th>
+                            <th>Position</th>
+                            <th>Hours</th>
+                            <th>Edit</th>
+                            <th>Delete</th>
+                        </thead>
+                        <tbody>
+                            {% for employee in employee_list %}
+                                <tr>
+                                    <td>{{ employee.lastName }}</td>
+                                    <td>{{ employee.firstName }}</td>
+                                    <td>{{ employee.get_position_display }}</td>
+                                    <td>{{ employee.hours }}</td> 
+                                    <td>
+                                        <form action="{% url 'scheduler:employee-update' employee.id %}">
+                                            {% load staticfiles %}
+                                            <button class="edit-button" type="submit"><img src="{% static 'img/edit.png' %}"></button>
+                                        </form>
+                                    </td>
+                                    <td>
+                                        <form action="{% url 'scheduler:employee-delete' employee.id %}" method="post">
+                                        {% csrf_token %}
+                                            <button class="delete-button" type="submit" onclick="return confirm('Are you sure you want to delete employee {{ employee.firstName }} {{ employee.lastName }}?');">
+                                                <img src="{% static 'img/delete.png' %}">
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div><!--col-12-->
+                {% else %}
+                
+                    <p>No employees.</p>
+                
+                {% endif %}
+                <div id="add-employee-form" class="col-xs-12 model-form">
+                    <form action=" {% url 'scheduler:manage-employees' %}" method="post">
+                        {% csrf_token %}
+                        <h4 class="subtitle" style="margin-top: 45px;">Add New Employee</h4>
+                        <hr></hr>
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <label for="id_firstName">First Name</label>{{ form.firstName }}
+                            </div><!--col-6-->
+                            <div class="col-xs-6">
+                                <label for="id_lastName">Last Name</label>{{ form.lastName }}
+                            </div><!--col-6-->
+                        </div><!--row-->
+                        <div class="row">
+                            <div class="col-xs-5">
+                                <label class="input-label-padding" for="id_position">Position</label>{{ form.position }}
+                            </div><!--col-5-->
+                            <div class="col-xs-4">
+                                <label class="input-label-padding" for="id_hours">Hours</label>{{ form.hours }}
+                            </div><!--col-4-->
+                            <div class="col-xs-3">
+                                <label class="input-label-padding" for="id_quad">Quad</label>{{ form.quad }}
+                            </div><!--col-3-->
+                            <!--<div class="col-xs-12">
+                                <label for="id_buyer">Is a Buyer</label>{{ form.isBuyer }}
+                            </div><!--col-12-->
+                        </div><!--row-->
+                        <div class="row">
+                            <div class="col-xs-12 center-block text-center button-row">
+                                <input id="add-employee-button" class="submit-button" type="submit" value="Save" />
+                            </div><!--col-12-->
+                        </div><!--row-->
+                    </form>
+                </div><!--row-->
+            </div><!--row-->
+        </div><!--employee-div-->
+        <div id="quad-div" class="employee-div sub-div">
+            {% if employee_list %}
+                <div class="row">
+                    <h4 class="subtitle">Quad Assignments</h4>
+                    <div class="col-xs-3">
+                        <h3>Quad One</h3>
+                        <hr></hr>
+                        <ul>
+                        {% for employee in employee_list %}
+                            {% if employee.quad == 1 %}
+                            <li>{{ employee.firstName }} {{ employee.lastName }}</li>
+                            {% endif %}
+                        {% endfor %}
+                        </ul>
+                    </div><!--col-3-->
+                    <div class="col-xs-3">
+                        <h3>Quad Two</h3>
+                        <hr></hr>
+                        <ul>
+                        {% for employee in employee_list %}
+                            {% if employee.quad == 2 %}
+                            <li>{{ employee.firstName }} {{ employee.lastName }}</li>
+                            {% endif %}
+                        {% endfor %}
+                        </ul>
+                    </div><!--col-3-->
+                    <div class="col-xs-3">
+                        <h3>Quad Three</h3>
+                        <hr></hr>
+                        <ul>
+                        {% for employee in employee_list %}
+                            {% if employee.quad == 3 %}
+                            <li>{{ employee.firstName }} {{ employee.lastName }}</li>
+                            {% endif %}
+                        {% endfor %}
+                        </ul>
+                    </div><!--col-3-->
+                    <div class="col-xs-3">
+                        <h3>Quad Four</h3>
+                        <hr></hr>
+                        <ul>
+                        {% for employee in employee_list %}
+                            {% if employee.quad == 4 %}
+                            <li>{{ employee.firstName }} {{ employee.lastName }}</li>
+                            {% endif %}
+                        {% endfor %}
+                        </ul>
+                    </div><!--col-3-->
+                </div><!--row-->
+            {% endif %}
+        </div><!--employee-div-->
+    </div><!--container-->
+</body>
+{% include "scheduler/footer.html" %}

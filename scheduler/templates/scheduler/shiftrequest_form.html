@@ -1,0 +1,52 @@
+{% include "scheduler/base.html" %}
+{% include "scheduler/menu.html" %}
+{% load staticfiles %}
+
+<link href="https://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/flick/jquery-ui.css">
+
+<body class="requests">
+    <div class="container make-full-page">
+        <div class="row">
+            <div class="col-xs-12 center-block text-center">
+                <div class="model-form-background">
+                    <div class="col-xs-12 text-center">
+                        <h4 class="sub-page-title page-top">New Shift Request</h4>
+                    </div><!--col-->
+                    <div class="col-xs-12 text-center model-form">
+                        <form action="{% url 'scheduler:shift-request' %}" method="POST">
+                        {% csrf_token %}
+                            <div class="row">
+                                <div class="col-xs-12 text-center">
+                                    <label for="id_employee">Employee: </label>{{ form.employee }}
+                                </div> 
+                            </div><!--row-->
+                            <div class="row">
+                                <div class="col-xs-12 text-center">
+                                    <label for="id_date">Date: </label>{{ form.date }}
+                                </div> 
+                            </div><!--row-->
+                            <div class="row">
+                                <div class="col-xs-12 text-center">
+                                    <label for="id_shift">Shift: </label>{{ form.shift }}
+                                </div> 
+                            </div><!--row-->
+                            <div class="row">
+                                <div class="col-xs-12 text-center button-row">
+                                    <input class="submit-button small-submit-button" type="submit" value="Create" />
+                                </div> 
+                            </div><!--row-->
+                        </form>
+                    </div><!--col-->
+                </div><!--model-form-background-->
+            </div><!--col-12-->
+        </div><!--row-->
+    </div><!--container-->
+</body>
+
+{% include "scheduler/footer.html" %}
+
+<script>
+    $("#id_date").datepicker({firstDay:1});
+</script>

@@ -1,0 +1,60 @@
+{% include "scheduler/base.html" %}
+{% include "scheduler/menu.html" %}
+
+<body class="generate">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12">
+                <h4 class="page-top sub-page-title text-center">Generated Schedule for {{ temp_schedule_list.0.weekStart }}</h4>
+            </div>
+            <div class="col-xs-12">
+                <!--<div class="overflow-container">-->
+                    <table class="schedule-table schedule-width">
+                    <tr>
+                        <th>Employee</th>
+                        <th>Monday</th>
+                        <th>Tuesday</th>
+                        <th>Wednesday</th>
+                        <th>Thursday</th>
+                        <th>Friday</th>
+                        <th>Saturday</th>
+                        <th>Sunday</th>
+                    </tr>
+                    {% for schedule in temp_schedule_list %}
+                    <tr>
+                        <td> {{ schedule.employee }}</td>
+                        <td> {{ schedule.get_mondayShift_display }}</td>
+                        <td> {{ schedule.get_tuesdayShift_display }}</td>
+                        <td> {{ schedule.get_wednesdayShift_display }}</td>
+                        <td> {{ schedule.get_thursdayShift_display }}</td>
+                        <td> {{ schedule.get_fridayShift_display }}</td>
+                        <td> {{ schedule.get_saturdayShift_display }}</td>
+                        <td> {{ schedule.get_sundayShift_display }}</td>
+                    </tr>
+                    {% endfor %}
+                    </table>
+                <!--</div><!--overflow container-->
+            </div>
+            <div class="col-xs-12 text-center">
+                <!-- Delete Button -->
+                <form action="{% url 'scheduler:temp-schedule-delete' %}" method="post">
+                {% csrf_token %}
+                    <button class="submit-button" type="submit" onclick="return confirm('Delete Schedule?');">Delete</button>
+                </form>
+                
+                <!-- Save Button -->
+                {% if override_flag %}
+                    <form action="{% url 'scheduler:schedule-override' %}" method="post">
+                    {% csrf_token %}
+                        <button class="submit-button" type="submit" onclick="return confirm('You have already saved a schedule for this week. Would you like to override the existing schedule?');">Save</button>
+                    </form>
+                {% else %}
+                    <form action="{% url 'scheduler:schedule-save' %}" method="post">
+                    {% csrf_token %}
+                        <button class="submit-button" type="submit" onclick="return confirm('Save Schedule?');">Save</button>
+                    </form>
+                {% endif %}
+            </div><!--col-->
+        </div><!--row-->
+    </div><!--container-->
+</body>

@@ -1,0 +1,120 @@
+{% include "scheduler/base.html" %}
+{% include "scheduler/menu.html" %}
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<body class="schedules">
+    <div class="container make-full-page">
+        <div class="row">
+            <div class="col-xs-12 center-block text-center">
+                <h1 class="page-title">Schedules</h1>
+            </div><!--col-->
+        </div><!--row-->
+        <div class="row">
+            <!--<form action="{% url 'scheduler:schedule-delete' %}" method="post">-->
+            <form action="{% url 'scheduler:schedules' %}" method="post">
+                {% csrf_token %}
+                <div class="col-xs-12 center-block text-center">
+                    {% load staticfiles %}
+                    <h3 id="week-start" class="subtitle">For the week of 
+                        <button id="prev-week" type="button">
+                            <img src="{% static 'img/left-arrow.png' %}"/>
+                        </button>
+                        <input id="oval-div" name="week-start" value="{{ monday | date:'M d, Y' }}" readonly/>
+                    </h3>
+                    <button type="button" id="next-week">
+                        <img src="{% static 'img/right-arrow.png' %}"/>
+                    </button>
+                </div><!--col-xs-12-->
+                
+                <div class="col-xs-12 text-right">
+                    <div class="schedule-width" id="button-row">
+                        {% if currSchedules %}
+                            {% load staticfiles %}
+                            <button class="schedule-button logout-button" type="submit" name="coverage">Coverage</button>
+                            <button class="edit-button schedule-button" type="submit" name="edit" onclick="return confirm('Edit Schedule?');"><img src="{% static 'img/edit.png' %}"/></button>
+                            <button class="delete-button schedule-button" type="submit" name="delete" onclick="return confirm('Delete Schedule?');"><img src="{% static 'img/delete.png' %}"/></button>
+                        {% endif %}
+                    </div>
+                </div><!--col-xs-12-->
+            </form>
+            {% if currSchedules %}
+            <div id="schedule-container" style="width:100%;">
+                <table id="schedule-table-original" class="schedule-table schedule-width">
+                    <tr>
+                        <th>Employee</th>
+                        <th>Monday {{ monday | date:'m/d' }}</th>
+                        <th>Tuesday</th>
+                        <th>Wednesday</th>
+                        <th>Thursday</th>
+                        <th>Friday</th>
+                        <th>Saturday</th>
+                        <th>Sunday</th>
+                    </tr>
+                    {% for weekSchedule in weekSchedules %}
+                        {% if weekSchedule.weekStart == monday %}
+                            <tr>
+                                <td>{{ weekSchedule.employee }}</td>
+                                <td>{{ weekSchedule.get_mondayShift_display }}</td>
+                                <td>{{ weekSchedule.get_tuesdayShift_display }}</td>
+                                <td>{{ weekSchedule.get_wednesdayShift_display }}</td>
+                                <td>{{ weekSchedule.get_thursdayShift_display }}</td>
+                                <td>{{ weekSchedule.get_fridayShift_display }}</td>
+                                <td>{{ weekSchedule.get_saturdayShift_display }}</td>
+                                <td>{{ weekSchedule.get_sundayShift_display }}</td>
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                </table>
+            </div><!--overflow-container-->
+            {% else %}
+                <div id="schedule-container" style="width:100%;">
+                    <table id="schedule-table-original" class="schedule-table schedule-width">
+                        <thead class="no-border"><th class="no-border"><p class="warning-text">No schedule has been generated for this week.</p></th></thead>
+                        <tr><td class="no-border"><a class="submit-button" href="{% url 'scheduler:index' %}">Generate</a></td></tr>
+                    </table>
+                </div>
+            {% endif %}<!--if currSchedules-->
+        </div><!--row-->
+    </div><!--container-->
+</body>
+<!--{% include "scheduler/footer.html" %}-->
+
+<script type="text/javascript">
+    var monday = new Date({{ monday.year }}, {{monday.month}}-1, {{monday.day}});
+
+    $("#prev-week").on('click',function(){
+       monday.setDate(monday.getDate()-7);
+       fillSchedule();
+    });
+
+    $("#next-week").on('click',function(){
+       monday.setDate(monday.getDate()+7);
+       fillSchedule();
+    });
+
+    function fillSchedule(){
+        var options = {year:'numeric', month: 'short', day:'numeric'}
+        document.getElementById("schedule-table-original").innerHTML = "<tr><th>Employee</th><th>Monday</th><th>Tuesday</th><th>Wednesday</th><th>Thursday</th><th>Friday</th><th>Saturday</th><th>Sunday</th></tr>"
+        //document.getElementById("oval-div").innerHTML = monday.toLocaleDateString('en-US', options);
+        document.getElementById("oval-div").value = monday.toLocaleDateString('en-US', options);
+        //document.getElementById("schedule-container").style.height="100%";
+        //console.log(monday);
+        var hasSchedule = false;
+        {% for weekSchedule in weekSchedules %}
+            tempDate = new Date({{weekSchedule.weekStart.year}}, {{weekSchedule.weekStart.month}}-1,{{weekSchedule.weekStart.day}})
+            //console.log(tempDate, monday)
+            if ( tempDate.getTime() == monday.getTime()){
+                hasSchedule = true
+                //console.log("{{weekSchedule.mondayShift}}")
+                document.getElementById("button-row").innerHTML = "{% load staticfiles %}<button class='schedule-button logout-button' type='submit' name='coverage'>Coverage</button> <button class='edit-button schedule-button' type='submit' name='edit' onclick='return confirm('Edit Schedule?');'><img src='{% static 'img/edit.png' %}'/></button> <button class='delete-button schedule-button' type='submit' onclick='return confirm('Delete Schedule?');'><img src='{% static 'img/delete.png' %}'/></button>";
+                document.getElementById("schedule-table-original").innerHTML += "<tr><td>{{ weekSchedule.employee }}</td><td>{{ weekSchedule.get_mondayShift_display }}</td><td>{{ weekSchedule.get_tuesdayShift_display }}</td><td>{{ weekSchedule.get_wednesdayShift_display }}</td><td>{{ weekSchedule.get_thursdayShift_display }}</td><td>{{ weekSchedule.get_fridayShift_display }}</td><td>{{ weekSchedule.get_saturdayShift_display }}</td><td>{{ weekSchedule.get_sundayShift_display }}</td></tr>";
+            }
+        {%endfor%}
+        if ( hasSchedule == false ){
+            document.getElementById("button-row").innerHTML = "";
+            document.getElementById("schedule-table-original").innerHTML = "<thead class='no-border'><th class='no-border'><p class='warning-text'>No schedule has been generated for this week.</p></th></thead><tr><td class='no-border'><a class='submit-button' href='{% url 'scheduler:index' %}'>Generate</a></td></tr>";
+            //document.getElementById("schedule-container").style.height="100%";
+        }
+    };
+</script>

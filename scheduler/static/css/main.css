@@ -1,0 +1,809 @@
+@font-face {
+    font-family: Gotham;
+    src: url('../fonts/gotham.ttf')  format("truetype");
+}
+
+@font-face {
+    font-family: Gotham;
+    src: url('../fonts/gotham-bold.ttf')  format("truetype");
+    font-weight: bold;
+}
+
+@font-face {
+    font-family: Gotham;
+    src: url('../fonts/gotham-light.ttf')  format("truetype");
+    font-weight: light;
+}
+
+@font-face {
+    font-family: Pier Sans;
+    src: url('../fonts/pier-regular.otf');
+}
+
+@font-face {
+    font-family: Pier Sans;
+    src: url('../fonts/pier-bold.otf');
+    font-weight: bold;
+}
+
+@font-face {
+    font-family: Markella;
+    src: url('../fonts/markella.otf');
+}
+
+/* ------------------------ Login Bar ------------------------- */
+#login-bar {
+    /*background-color: #F6F7FB;*/
+    position: fixed;
+    bottom: 0;
+    height: 60px;
+    text-align: right;
+    line-height: 60px;
+    font-size: 12px;
+    right: 0;
+    z-index: 100;
+}
+
+#login-bar-text {
+    display: inline-block;
+    background-color: white;
+
+    -webkit-box-shadow: 30px 40px 107px 76px rgba(255,255,255,1);
+    -moz-box-shadow: 30px 40px 107px 76px rgba(255,255,255,1);
+    box-shadow: 30px 40px 107px 76px rgba(255,255,255,1);
+}
+
+#login-text {
+    font-family: Pier Sans, arial, sans-serif;
+    color: #7E7E7E;
+    display: inline-block;
+}
+
+.logout-button {
+    border: 1px solid #aaa;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    font-family: Pier Sans, arial, sans-serif;
+    background-color: #F6F7FB;
+    color: black;
+    padding: 6px 12px;
+    font-size: 12px;
+
+    -webkit-transition: all 0.2s ease-out;
+    -moz-transition: all 0.2s ease-out;
+    -o-transition: all 0.2s ease-out;
+    transition: all 0.2s ease-out;
+}
+
+.logout-button:hover {
+    cursor: pointer;
+    background-color: #1BD290;
+    border: 1px solid #1BD290;
+    color: white;
+
+    -webkit-transition: all 0.2s ease-out;
+    -moz-transition: all 0.2s ease-out;
+    -o-transition: all 0.2s ease-out;
+    transition: all 0.2s ease-out;
+}
+
+#logout-link {
+    text-decoration: none;
+    margin-left: 10px;
+    margin-right: 20px;
+    height: 25px;
+    padding: 7px 10px;
+}
+
+/* ------------------------ Login Page ------------------------- */
+
+#login-button {
+    padding: 15px 60px;
+    margin-top: 40px;
+    margin-bottom: 60px;
+}
+
+#login-div {
+    padding: 50px 0px;
+    background-color: #F6F7FB;
+    border-radius: 25px;
+    width: 375px;
+    height: 375px;
+    margin: 0 auto;
+    margin-top: 250px;
+}
+
+#login-div .page-title {
+    margin-top: 10px;
+    margin-bottom: 50px;
+}
+
+#id_username, #id_password {
+    -webkit-border-radius: 35px;
+    -moz-border-radius: 35px;
+    border-radius: 35px;
+    border: 1px solid #979797;
+    padding: 5px 10px 5px 10px;
+    font-family: Gotham, Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    text-align: center;
+    margin-left: 5px;
+    letter-spacing: 0.88px;
+}
+
+/* ------------------------ Menu ------------------------- */
+#menu-container {
+    height: 60px;
+    line-height: 60px;
+}
+
+#menu {
+    font-family: Pier Sans, Arial, Helvetica, sans-serif;
+    text-transform: uppercase;
+    font-size: 10px;
+    letter-spacing: 1px;
+    /*width: 50%;
+    margin: 0 auto;*/
+    /*margin-top: 25px;*/
+}
+
+.menu-item {
+    list-style: none;
+    display: inline-block;
+    margin-left: 25px;
+    margin-right: 25px;
+}
+
+.menu-item a {
+    color: #868686;
+    padding-bottom: 10px;
+
+    -webkit-transition: all 0.2s ease-out;
+    -moz-transition: all 0.2s ease-out;
+    -o-transition: all 0.2s ease-out;
+    transition: all 0.2s ease-out;
+}
+
+.menu-item a:hover {
+    color: black;
+    border-bottom: 3px solid #1BD290;
+    text-decoration: none;
+
+    -webkit-transition: all 0.2s ease-out;
+    -moz-transition: all 0.2s ease-out;
+    -o-transition: all 0.2s ease-out;
+    transition: all 0.2s ease-out;
+}
+
+body.generate #menu .menu-item.generate a,
+body.employees #menu .menu-item.employees a,
+body.requests #menu .menu-item.requests a,
+body.schedules #menu .menu-item.schedules a {
+    color: black;
+    border-bottom: 3px solid #1BD290;
+    min-height: 100%; /* For keeping the footer at the bottom */
+}
+
+.make-full-page {
+    min-height: 100%;
+    /*height: 100%;*/
+    margin-bottom: -60px;
+    margin-top: -60px;
+
+}
+
+.page-title {
+    font-family: Markella, Arial, Helvetica, sans-serif;
+    text-transform: uppercase;
+    font-size: 36px;
+    letter-spacing: 2px;
+    /*margin-top: 100px;*/
+    /*margin-top: 80px;*/
+    margin-top: 60px;
+    margin-bottom:  45px;
+}
+
+ul {
+    list-style: none;
+    padding: 0px;
+}
+
+.sub-div {
+    margin: 0 auto;
+    background-color: #F6F7FB;
+    -webkit-border-radius: 25px;
+    -moz-border-radius: 25px;
+    border-radius: 25px;
+}
+
+.subtitle {
+    font-family: Gotham;
+    font-weight: bold;
+    font-size: 18px;
+    /*text-align: left;*/
+}
+
+.sub-subtitle {
+    font-family: Pier Sans, Arial, sans-serif;
+    font-size: 12px;
+    letter-spacing: 1px;
+    font-weight: 100;
+}
+
+label {
+    font-family: Pier Sans, Arial, Helvetica, sans-serif;
+    font-weight: 100 !important;
+    letter-spacing: 0.5px;
+    font-size: 12px;
+    margin-right: 5px;
+}
+
+hr {
+    border: none !important;
+    height: 1px !important;
+    color: #ccc;
+    background-color: #ccc
+}
+
+.submit-button {
+    background-color: #1BD290;
+    -webkit-border-radius: 50px;
+    -moz-border-radius: 50px;
+    border-radius: 50px;
+    /*font-family: Markella, Arial, Helvetica, sans-serif;*/
+    font-family: Pier Sans, arial, sans-serif;
+    font-weight: bold;
+    color: white;
+    font-size: 13px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    border: 0px;
+    padding: 15px 60px;
+
+    -webkit-transition: all 0.2s ease-out;
+    -moz-transition: all 0.2s ease-out;
+    -o-transition: all 0.2s ease-out;
+    transition: all 0.2s ease-out;
+}
+
+.submit-button:hover {
+    background-color: #45eaaf;
+    text-decoration: none;
+    color: white;
+
+    -webkit-transition: all 0.2s ease-out;
+    -moz-transition: all 0.2s ease-out;
+    -o-transition: all 0.2s ease-out;
+    transition: all 0.2s ease-out;
+}
+
+.small-submit-button {
+    padding: 10px 50px;
+}
+
+table {
+    width: 100%;
+}
+
+thead {
+    border-bottom: 0.5px solid #ccc;
+}
+
+body.generate th,
+body.employees th,
+body.requests th {
+    font-family: Pier Sans, Arial, sans-serif;
+    font-size: 12px;
+    letter-spacing: 1px;
+    padding-bottom: 10px;
+    font-weight: 100;
+}
+
+tr {
+    font-family: Gotham, Arial, sans-serif;
+    font-size: 12px;
+    font-weight: 100;
+    letter-spacing: 0.5px;
+}
+
+body.generate td,
+body.employees td,
+body.requests td {
+    padding-top: 5px;
+}
+
+/* ------------------------ Generate Page ------------------------- */
+body.generate .page-title,
+body.schedules .page-title {
+    letter-spacing: 4px;
+}
+
+#week-div label {
+    font-size: 15px;
+}
+
+.week-div {
+        position: relative;
+        display: inline-block;
+}
+
+.week-div::before{
+    position: absolute;
+    content: " \25bc";
+    top: 0px;
+    right: 0px;
+    height: 20px;
+    width: 20px;
+}
+
+#id_currentWeek {
+    -webkit-border-radius: 35px;
+    -moz-border-radius: 35px;
+    border-radius: 35px;
+    border: 1px solid #979797;
+    padding: 5px 10px 5px 10px;
+    font-family: Gotham, Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    text-align: center;
+    margin-left: 5px;
+    letter-spacing: 0.88px;
+}
+
+.ui-widget-header {
+    background: white;
+}
+
+.ui-spinner a.ui-spinner-button {
+    display: block;
+}
+
+.meeting-div {
+    width: 60%;
+    margin-top: 40px;
+    padding: 15px 0px 30px 30px;
+    margin-bottom: 5px;
+}
+
+select:disabled {
+    opacity: 0.5;
+}
+
+.meeting-div .col-xs-6 {
+    text-align: left;
+    padding: 0px;
+    margin-top: 10px;
+}
+
+.meeting-div .col-xs-6 li {
+    margin-bottom: 10px;
+ }
+
+.meeting-div .col-xs-10 {
+    padding-left: 10px;
+}
+
+.meeting-div input[type=checkbox] {
+    margin-right: 10px;
+}
+
+.meeting-div select {
+    background-color: white;
+
+}
+
+/* Calendar stuff */
+
+.ui-widget-header {
+    border: 1px solid #F6F7FB !important; 
+    background: #F6F7FB !important;
+}
+
+.ui-state-default {
+    background: none !important;
+    border: 0px !important;
+}
+
+.ui-state-hover {
+    color: black !important;
+}
+
+.ui-state-active {
+    background: #0073ea !important;
+    color: white !important;
+}
+
+#generate-button {
+    margin-top: 30px;
+}
+
+/*------------------------- Generated Schedule Page ---------------------*/
+.page-top {
+    margin-top: 50px;
+    margin-bottom: 30px;
+}
+
+.sub-page-title {
+    font-size: 25px;
+    font-family: Gotham, arial, sans-serif;
+    font-weight: bold;
+}
+
+.overflow-container {
+    width: 95%;
+    height: 700px;
+    overflow-y: scroll;
+    border-top: 1px solid #efefef;
+    border-bottom: 1px solid #eee;
+    margin: 0 auto;
+}
+
+/* ------------------------ Employee Page ------------------------- */
+#message-div {
+    width: 55%;
+    margin: 0 auto;
+    color: #8c91ad;
+}
+
+.employee-div {
+    width: 75%;
+    /*margin-top: 15px;*/
+    padding: 15px 80px;
+}
+
+.employee-div .col-xs-12 {
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
+body.employees .subtitle {
+    margin-top: 15px;
+    margin-bottom: 25px;
+}
+
+.edit-button, .delete-button,
+#next-week, #prev-week {
+    background-color: rgba(0,0,0,0);
+    border: 0px;
+}
+
+.edit-button img,
+.delete-button img,
+#next-week img,
+#prev-week img{
+    height: 15px;
+    width: 15px;
+}
+
+.edit-button img,
+.delete-button img {
+    opacity: 0.5;
+}
+
+.edit-button img:hover,
+.delete-button img:hover {
+    opacity: 1;
+}
+
+.model-form-background {
+    width: 33%;
+    /*background-color: #F6F7FB;*/
+    display: inline-block;
+    /*border-radius: 25px;*/
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    margin: 0 auto;
+    padding: 0px 20px 30px 20px;
+    margin-top: 50px;
+}
+
+.model-form:not(#add-employee-form) .row {
+    /*width: 30%;*/
+    margin: 0 auto;
+}
+
+.model-form-background .sub-page-title {
+    margin-bottom: 45px;
+}
+
+#add-employee-form .row,
+#add-employee-form hr {
+    width: 80%;
+    left: 0;
+}
+
+#add-employee-form hr {
+    float: left;
+    margin-top: 0px;
+}
+
+.input-label-padding {
+    padding-right: 10px;
+}
+
+.model-form .col-xs-12,
+.model-form .col-xs-6,
+.model-form .col-xs-5,
+.model-form .col-xs-4,
+.model-form .col-xs-3 {
+    display: table;
+    margin-bottom: 10px;
+    text-align: left;
+}
+
+.model-form label {
+    display: table-cell;
+}
+
+.model-form input[type="text"],
+.model-form input[type="number"],
+.model-form select {
+    -webkit-border-radius: 25px;
+    -moz-border-radius: 25px;
+    border-radius: 25px;
+    border: 1px solid #ccc;
+    padding: 3px 10px;
+    background-color: white;
+
+    display: table-cell;
+    width: 100%;
+
+    /*font-family: Pier Sans, arial;*/
+}
+
+.button-row {
+    margin: 0 auto;
+    margin-top: 40px;
+    text-align: center !important;
+}
+
+
+#add-employee-button {
+    padding: 10px 50px;
+    margin-bottom: 0px;
+}
+
+#quad-div {
+    /*margin-bottom: 75px;*/
+    margin-top: 45px;
+}
+
+#quad-div h3 {
+    font-family: Pier Sans, arial, sans-serif;
+    font-size: 14px;
+    letter-spacing: 1px;
+    margin-top: 0px;
+    margin-bottom: 5px;
+}
+
+#quad-div li {
+    font-family: Gotham, arial, sans-serif;
+    font-size: 12px;
+    font-weight: light;
+    margin-bottom: 10px;
+    letter-spacing: 0.5px;
+}
+
+#quad-div hr {
+    width: 100%;
+    margin: 0px;
+    margin-bottom: 10px;
+}
+
+#quad-div .col-xs-3 {
+    padding: 0px;
+}
+
+/* ------------------------ Request Page ------------------------- */
+
+#calendar {
+    /*max-width: 600px;*/
+    margin: 0 auto;
+    padding-right: 20px;
+}
+
+#request-div {
+    margin-top: 25px;
+}
+
+#request-div .subtitle {
+    margin-bottom: 20px;
+}
+
+#request-button {
+    margin-top: 50px;
+}
+
+#calendar thead {
+    border-bottom: 0px;
+}
+
+.fc-month-button {
+    opacity: 0 !important;
+}
+
+.fc-center h2 {
+    font-family: Gotham, arial, sans-serif;
+    font-weight: bold !important;
+    font-size: 20px !important;
+}
+
+.fc-unthemed .fc-content, 
+.fc-unthemed .fc-divider, 
+.fc-unthemed .fc-list-heading td, 
+.fc-unthemed .fc-list-view, 
+.fc-unthemed .fc-popover, 
+.fc-unthemed .fc-row, 
+.fc-unthemed tbody, 
+.fc-unthemed td, 
+.fc-unthemed th, 
+.fc-unthemed thead {
+    border-color: #eee !important;
+}
+
+.fc-state-default {
+    background-image: none !important;
+    background-color: white !important;
+}
+
+.fc-unthemed td.fc-today {
+    background-color: #F6F7FB !important;
+}
+
+.fc-head tr {
+    background-color: #F6F7FB;
+}
+
+.fc-center h3 {
+    font-size: 25px;
+}
+
+.fc-content {
+    font-weight: bold;
+}
+
+body.requests .fc-event {
+    /*background-color: #119666;*/
+}
+
+body.requests .subtitle {
+    font-size: 15px;
+}
+
+/* ------------------------ Schedule Page ------------------------- */
+#export-button {
+    padding: 15px 30px !important;
+    margin-top: 50px;
+}
+
+#oval-div {
+    border: 1px solid gray;
+    padding: 10px;
+    display: inline-block;
+    -webkit-border-radius: 25px;
+    -moz-border-radius: 25px;
+    border-radius: 25px;
+    width: 200px;
+    text-align: center;
+}
+
+#week-start {
+    text-align: center;
+    display: inline-block;
+    /*margin-bottom: 25px;*/
+    margin-top: 0px;
+    font-size: 15px;
+}
+
+#prev-week {
+    padding-right: 0px;
+}
+
+#next-week {
+    padding-left: 0px;
+}
+
+#button-row {
+    margin-bottom: 15px;
+    margin-top: -10px;
+}
+
+.schedule-button img {
+    height: 20px;
+    width: 20px;
+    margin-left: 15px;
+}
+
+.schedule-width {
+    width: 85%;
+    margin: 0 auto
+}
+
+.schedule-table {
+    margin-bottom: 75px;
+}
+
+.schedule-table th {
+    padding: 10px 15px;
+}
+
+.schedule-table td {
+    padding: 5px 15px;
+}
+
+.schedule-table th, .schedule-table td {
+    border: 1px solid #ccc;
+    text-align: center;
+    line-height: 17px;
+}
+
+.schedule-table select {
+    width: 100%;
+    height: 30px;;
+}
+
+.no-border {
+    border: 0px !important;
+}
+
+.warning-text {
+    font-weight: 100;
+    font-size: 15px;
+    padding-bottom: 20px;
+}
+
+.read-only-field select {
+    opacity: 1;
+    /* for Firefox */
+    -moz-appearance: none;
+    /* for Chrome */
+    -webkit-appearance: none;
+    background-color: white;
+    border: 0px;
+}
+
+.read-only-field select::-ms-expand {
+    display: none;
+  }
+
+/* ------------------------ Coverage --------------------------- */
+#coverage-table {
+    width: auto;
+    margin: 0 auto;
+    border: 1px solid #ccc;
+}
+#coverage-table th, #coverage-table td {
+    padding: 10px;
+    border-right: 1px solid #ccc;
+    border-left: 1px solid #ccc;
+}
+
+#coverage-table thead {
+    background-color: #F6F7FB;
+}
+
+#coverage-table td {
+    width: 200px;
+    vertical-align: top;
+}
+
+
+
+/* ------------------------ Footer ------------------------- */
+#footer-container {
+    height: 60px;
+    line-height: 60px;
+    width: 100%;
+}
+
+#footer {
+    font-family: Gotham, Arial, sans-serif;
+    text-transform: uppercase;
+    font-weight: light;
+    font-size: 10px;
+    /*letter-spacing: 5.5px;*/
+    letter-spacing: 3.5px;
+    /*margin-top: 75px;*/
+    margin-bottom: 0px;
+    color: #909090;
+}
+

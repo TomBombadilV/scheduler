@@ -1,0 +1,58 @@
+{% include "scheduler/base.html" %}
+{% include "scheduler/menu.html" %}
+
+<body class="employees">
+    <div class="container make-full-page">
+        <div class="row">
+            <div class="col-xs-12 center-block text-center">
+                <div class="model-form-background">
+                    <div class="col-xs-12 text-center">
+                        <h4 class="sub-page-title page-top">Edit Employee</h4>
+                    </div><!--col-->
+                    <div class="col-xs-12 model-form text-center center-block">
+                        <form method="POST">
+                        {% csrf_token %}
+                            <div class="row">
+                                <div class="col-xs-12 text-center">
+                                    <label for="id_firstName">First Name: </label> {{ form.firstName }}
+                                </div> 
+                            </div><!--row-->
+                            <div class="row">
+                                <div class="col-xs-12 text-center">
+                                    <label for="id_lastName">Last Name: </label> {{ form.lastName }}
+                                </div><!--col-->
+                            </div><!--row-->
+                            <div class="row">
+                                <div class="col-xs-12 text-center">
+                                    <label for="id_position" class="input-label-padding">Position: </label> {{ form.position }}
+                                </div><!--col-->
+                            </div><!--row-->
+                            <div class="row">
+                                <div class="col-xs-12 text-center">
+                                    <label for="id_hours">Hours per Week: </label> {{ form.hours }}
+                                </div><!--col-->
+                            </div><!--row-->
+                            <div class="row">
+                                <div class="col-xs-12 text-center">
+                                    <label for="id_quad" class="input-label-padding">Quad: </label> {{ form.quad }}
+                                </div><!--col-->
+                            </div><!--row-->
+                            <div class="row">
+                                <div class="col-xs-12 text-center">
+                                    <label for="id_quad">Can Buy: </label> {{ form.isBuyer }}
+                                </div><!--col-->
+                            </div><!--row-->
+                            <div class="row">
+                                <div class="col-xs-12 text-center button-row">
+                                    <input class="submit-button small-submit-button" type="submit" value="Update" />
+                                </div><!--col-->
+                            </div><!--row-->
+                        </form>
+                    </div><!--col-->
+                </div><!--model-form-background-->
+            </div><!--col-12-->
+        </div><!--row-->
+    </div><!--container-->
+</body>
+
+{% include "scheduler/footer.html" %}

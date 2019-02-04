@@ -1,0 +1,20 @@
+{% include "scheduler/base.html" %}
+
+<body>
+    <div class="container center-block text-center make-full-page">
+        <div class="row">
+            <div class="col-xs-12">
+                <div id="login-div">
+                    <h1 class="page-title">Login</h1>
+                    <form method="post">
+                    {% csrf_token %}
+                        {{ form.as_p }}
+                        <button id="login-button" class="submit-button" type="submit">Log In</button>
+                    </form>
+                </div><!--login div-->
+            </div><!--col-12-->
+        </div><!--row-->
+    </div><!--container-->
+</body>
+
+{% include "scheduler/footer.html" %}

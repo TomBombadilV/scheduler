@@ -1,0 +1,23 @@
+<div class="container" id="menu-container">
+    <div class="row">
+        <div class="col-xs-12 center-block text-center">
+            <ul id="menu">
+                <li class="menu-item generate"><a href="{% url 'scheduler:index' %}">Create Schedule</a></li>
+                <li class="menu-item employees"><a href="{% url 'scheduler:manage-employees' %}">Manage Employees</a></li>
+                <li class="menu-item requests"><a href="{% url 'scheduler:requests' %}">Shift / Vacation Requests</a></li>
+                <li class="menu-item schedules"><a href="{% url 'scheduler:schedules' %}">View Schedules</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div id="login-bar">
+    <!---<div class="row">-->
+        <!--<div class="col-xs-12">-->
+            <div id="login-bar-text">
+                <p id="login-text">logged in as: {{ request.user.username }}</p>
+                <a class="logout-button" id="logout-link" href="/logout">Log Out</a>
+            </div>
+        <!--</div><!--col-12-->
+    <!--</div><!--row-->
+</div><!--container-->

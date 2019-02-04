@@ -1,0 +1,192 @@
+{% include "scheduler/base.html" %}
+{% include "scheduler/menu.html" %}
+{% load staticfiles %}
+<head>
+    <link href="{% static 'fullcalendar-3.9.0/fullcalendar.min.css'%}" rel='stylesheet' />
+    <link href="{% static 'fullcalendar-3.9.0/fullcalendar.print.min.css'%}" rel='stylesheet' media='print' />
+    <script src="{% static 'fullcalendar-3.9.0/lib/moment.min.js'%}"></script>
+    <script src="{% static 'fullcalendar-3.9.0/lib/jquery.min.js'%}"></script>
+    <script src="{% static 'fullcalendar-3.9.0/fullcalendar.min.js'%}"></script>
+</head>
+<script>
+$(document).ready(function() {
+
+    $('#calendar').fullCalendar({
+      header: {
+        left: 'prev,next today',
+        center: 'title',
+        right: 'month'
+      },
+      navLinks: false, // can click day/week names to navigate views
+      editable: false,
+      eventLimit: true, // allow "more" link when too many events
+      firstDay: 1,
+      /*eventColor: '#119666',*/
+      eventColor: '#1e7353',
+      events: [
+        {% for request in vacation_request_list %}
+        {
+          title: '{{ request.employee }} (Vacation)',
+          start: '{{ request.startDate|date:"Y-m-d" }}',
+          // Have to do some weird stuff because full calendar is glitchy
+          end: '{{ request.endDate|date:"Y-m" }}'+'-'+'{{request.endDate.day|add:"1"}}'
+        },
+        {% endfor %}
+        {% for request in shift_request_list %}
+        {
+          title: '{{ request.employee }} ({{ request.shift }})',
+          start: '{{ request.date|date:"Y-m-d" }}',
+        },
+        {% endfor %}
+      ]
+    });
+
+  });
+
+</script>
+
+<body class="requests">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 center-block text-center">
+                <h1 class="page-title">Vacation/Shift&nbsp; Requests</h1>
+            </div><!--col-->
+        </div><!--row-->
+        <div class="row">
+            <div id="request-div" class="sub-div">
+                <div class="col-xs-8">
+                    <div id='calendar'></div>
+                </div><!--col-7-->
+                <div class="col-xs-4">
+                    {% if recurring_shift_request_list or vacation_request_list or shift_request_list %}
+                        <h4 class="subtitle">Vacation Requests</h4>
+                        <table style="margin-bottom: 45px">
+                            <thead class="sub-subtitle">
+                                <th>Employee</th>
+                                <th>Date(s)</th>
+                                <th>Edit</th>
+                                <th>Delete</th>
+                            </thead>
+                            <tbody>
+                                {% for request in vacation_request_list %}
+                                <tr>
+                                    <td>{{ request.employee.lastName }}, {{ request.employee.firstName }}</td>
+                                    <td>{{ request.startDate | date:"m/d/y" }} - {{ request.endDate | date:"m/d/y" }}</td>
+                                    <td>
+                                        <form action="{% url 'scheduler:vacation-request-update' request.id %}">
+                                            <button class="edit-button" type="submit"><img src="{% static 'img/edit.png' %}"/></button>
+                                        </form>
+                                    </td>
+                                    <td>
+                                        <form action="{% url 'scheduler:vacation-request-delete' request.id %}" method="post">
+                                        {% csrf_token %}
+                                            <button class="delete-button" type="submit" onclick="return confirm('Are you sure you want to delete this request?');">
+                                                <img src="{% static 'img/delete.png' %}"/>
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        <!--{% for request in vacation_request_list %}
+                            <li>{{ request.employee.lastName }}, {{ request.employee.firstName }} :: {{ request.startDate }} - {{ request.endDate }}</li>
+                            <form action="{% url 'scheduler:vacation-request-update' request.id %}">
+                                <button type="submit"></button>
+                            </form>
+                            <form action="{% url 'scheduler:vacation-request-delete' request.id %}" method="post">
+                            {% csrf_token %}
+                                <button type="submit" onclick="return confirm('Are you sure you want to delete this request?');"></button>
+                            </form>
+                        {% endfor %}-->
+                        <h4 class="subtitle">Shift Requests</h4>
+                        <table style="margin-bottom: 45px">
+                            <thead class="sub-subtitle">
+                                <th>Employee</th>
+                                <th>Date</th>
+                                <th>Shift</th>
+                                <th>Edit</th>
+                                <th>Delete</th>
+                            </thead>
+                            <tbody>
+                                {% for request in shift_request_list %}
+                                <tr>
+                                    <td>{{ request.employee.lastName }}, {{ request.employee.firstName }}</td>
+                                    <td>{{ request.date | date:"m/d/y" }}</td>
+                                    <td>{{ request.get_shift_display }}</td>
+                                    <td>
+                                        <form action="{% url 'scheduler:shift-request-update' request.id %}">
+                                        {% csrf_token %}
+                                            <button class="edit-button" type="submit"><img src="{% static 'img/edit.png' %}"/></button>
+                                        </form>
+                                    </td>
+                                    <td>
+                                        <form action="{% url 'scheduler:shift-request-delete' request.id %}" method="post">
+                                        {% csrf_token %}
+                                            <button class="delete-button" type="submit" onclick="return confirm('Are you sure you want to delete this request?');">
+                                                <img src="{% static 'img/delete.png' %}"/>
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        <h4 class="subtitle">Recurring Shift Requests</h4>
+                        <table>
+                            <thead class="sub-subtitle">
+                                <th>Employee</th>
+                                <th>Weekday</th>
+                                <th>Shift</th>
+                                <th>Edit</th>
+                                <th>Delete</th>
+                            </thead>
+                            <tbody>
+                                {% for request in recurring_shift_request_list %}
+                                <tr>
+                                    <td>{{ request.employee.lastName }}, {{ request.employee.firstName }}</td>
+                                    <td>{{ request.get_weekDay_display }}</td>
+                                    <td>{{ request.get_shift_display }}</td>
+                                    <td>
+                                        <form action="{% url 'scheduler:recurring-shift-request-update' request.id %}">
+                                            <button class="edit-button" type="submit"><img src="{% static 'img/edit.png' %}"/></button>
+                                        </form>
+                                    </td>
+                                    <td>
+                                        <form action="{% url 'scheduler:recurring-shift-request-delete' request.id %}" method="post">
+                                        {% csrf_token %}
+                                            <button class="delete-button" type="submit" onclick="return confirm('Are you sure you want to delete this request?');">
+                                                <img src="{% static 'img/delete.png' %}"/>
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        <!--{% for request in shift_request_list %}
+                            <li>{{ request.employee.lastName }}, {{ request.employee.firstName }} :: {{ request.date }} {{ request.shift }}</li>
+                            <form action="{% url 'scheduler:shift-request-update' request.id %}">
+                            {% csrf_token %}
+                                <button type="submit"></button>
+                            </form>
+                            <form action="{% url 'scheduler:shift-request-delete' request.id %}" method="post">
+                            {% csrf_token %}
+                                <button type="submit" onclick="return confirm('Are you sure you want to delete this request?');"></button>
+                            </form>
+                        {% endfor %}-->
+                    {% else %}
+                        <p>There are no active requests.</p>
+                    {% endif %}
+                </div><!--col-5-->
+                <div class="col-xs-12 center-block text-center">
+                    <form action="{% url 'scheduler:request-prompt' %}">
+                            <input id="request-button" class="submit-button" type="submit" value="New Request"/></input>
+                    </form><!--col-12-->
+                </div>
+            </div><!--request-div-->
+        </div><!--row-->
+    </div><!--container-->
+</body>
+
+{% include 'scheduler/footer.html' %}
