@@ -143,7 +143,7 @@ class VacationRequest(Request):
     #                            validators=[no_past])
     
     def __str__(self):
-        return self.employee.lastName + ", " + self.employee.firstName + " : " + self.startDate
+        return self.employee + " : " + self.startDate
 
 class ShiftRequest(Request):
     date = models.DateField(default=datetime.date.today, )
@@ -152,11 +152,11 @@ class ShiftRequest(Request):
     #recurring = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.employee.lastName + ", " + self.employee.firstName + " : " + self.shift
+        return self.employee + " : " + self.shift
 
 class RecurringShiftRequest(Request):
     weekDay = models.CharField(default="M", max_length=10, choices=WEEKDAY_CHOICES)
     shift = models.CharField(max_length=15, default="", choices=SHIFT_CHOICES)
 
     def __str__(self):
-        return self.employee.lastName + ", " + self.employee.firstName + " : " + self.weekDay + self.shift
+        return self.employee + " : " + self.weekDay + self.shift
