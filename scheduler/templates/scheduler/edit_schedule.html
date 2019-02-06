@@ -11,14 +11,15 @@
                     <h4 class="sub-page-title page-top center-block text-center">Edit Schedule for the Week of {{ date | date:'M d, Y'}}</h4>
                     <table class="schedule-table">
                         <thead>
+                            {% load custom_tags %}
                             <th>Employee</th>
-                            <th>Monday</th>
-                            <th>Tuesday</th>
-                            <th>Wednesday</th>
-                            <th>Thursday</th>
-                            <th>Friday</th>
-                            <th>Saturday</th>
-                            <th>Sunday</th>
+                            <th>Monday <br>  {{ date | date:'m/d' }}</th>
+                            <th>Tuesday <br> {{ date | plus_days:1 | date:'m/d' }}</th>
+                            <th>Wednesday<br>{{ date | plus_days:2 | date:'m/d' }}</th>
+                            <th>Thursday <br>{{ date | plus_days:3 | date:'m/d' }}</th>
+                            <th>Friday <br>  {{ date | plus_days:4 | date:'m/d' }}</th>
+                            <th>Saturday <br>{{ date | plus_days:5 | date:'m/d' }}</th>
+                            <th>Sunday <br>  {{ date | plus_days:6 | date:'m/d' }}</th>
                         </thead>
                     {% for form in formset %}
                         <tr>

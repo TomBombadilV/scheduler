@@ -58,6 +58,7 @@ def generateSchedule(request):
     context = {
         'temp_schedule_list': tempScheduleList,
         'override_flag': overrideFlag,
+        'date': tempWeekStart,
     }
     return render(request, 'scheduler/generate-schedule.html', context)
 
@@ -232,10 +233,22 @@ class RecurringShiftRequestDelete(LoginRequiredMixin, DeleteView):
     model = RecurringShiftRequest
     success_url = reverse_lazy('scheduler:requests')
 
+def getMods(employees):
+    mods = []
+    modPositions = ['SM', 'AM', 'SIM', 'SLIM']
+    for employee in employees:
+        if employee.position in modPositions:
+            mods.append(employee)
+    return mods
+
 @login_required
 def schedules(request, date=None):
     weekSchedules = WeekSchedule.objects.order_by("employee__lastName")
     template = loader.get_template('scheduler/schedules.html')
+
+    employees = Employee.objects.all()
+    mods = getMods(employees)
+    
     if not date:
         monday = datetime.today() + timedelta(days=0-datetime.today().weekday())
         monday = monday.date()
@@ -247,6 +260,7 @@ def schedules(request, date=None):
         'monday': monday,
         'datetime': datetime,
         'currSchedules': currSchedules,
+        'mods': mods,
     }
     if request.method == "POST":
         # Get week start date from template
