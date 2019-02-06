@@ -37,19 +37,19 @@
             </div>
             <div class="col-xs-12 text-center">
                 <!-- Delete Button -->
-                <form action="{% url 'scheduler:temp-schedule-delete' %}" method="post">
+                <form action="{% url 'scheduler:temp-schedule-delete' %}" class="inline-block generate-button" method="post">
                 {% csrf_token %}
                     <button class="submit-button" type="submit" onclick="return confirm('Delete Schedule?');">Delete</button>
                 </form>
                 
                 <!-- Save Button -->
                 {% if override_flag %}
-                    <form action="{% url 'scheduler:schedule-override' %}" method="post">
+                    <form action="{% url 'scheduler:schedule-override' %}" class="inline-block generate-page-button" method="post">
                     {% csrf_token %}
                         <button class="submit-button" type="submit" onclick="return confirm('You have already saved a schedule for this week. Would you like to override the existing schedule?');">Save</button>
                     </form>
                 {% else %}
-                    <form action="{% url 'scheduler:schedule-save' %}" method="post">
+                    <form action="{% url 'scheduler:schedule-save' %}" class="inline-block generate-page-button" method="post">
                     {% csrf_token %}
                         <button class="submit-button" type="submit" onclick="return confirm('Save Schedule?');">Save</button>
                     </form>
