@@ -13,16 +13,11 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import logout
 
 from .forms import NewEmployeeForm, GenerateScheduleForm, WeekScheduleForm
-
 from .models import Employee, VacationRequest, ShiftRequest, RecurringShiftRequest, WeekSchedule, TempSchedule, SHIFT_CHOICES
-
 from .schedulerLogic import generate
-
 from datetime import *
-
 from collections import OrderedDict
 
-# Create your views here.
 @login_required
 def index(request):
     employee_list = Employee.objects.order_by('lastName')
@@ -36,11 +31,9 @@ def index(request):
     if request.method=="POST":
         form = GenerateScheduleForm(request.POST)
         if form.is_valid():
-            #print "FORM IS VALID"
-            schedule = generate(form)
+            generate(form)
             return HttpResponseRedirect(reverse('scheduler:generate-schedule'))
         else:
-            print "FAIL"
             form = GenerateScheduleForm()
             context = {
             'form': form,
@@ -66,14 +59,12 @@ def generateSchedule(request):
         'temp_schedule_list': tempScheduleList,
         'override_flag': overrideFlag,
     }
-    #WeekSchedule.objects.all().delete()
     return render(request, 'scheduler/generate-schedule.html', context)
 
 @login_required
 def tempScheduleDelete(request):
     TempSchedule.objects.all().delete()
     return HttpResponseRedirect(reverse('scheduler:index'))
-    #return render(request, 'scheduler/index.html')
 
 @login_required
 def scheduleSave(request):
@@ -91,7 +82,6 @@ def scheduleSave(request):
         newSchedule.save()
     TempSchedule.objects.all().delete()
     return HttpResponseRedirect(reverse('scheduler:schedules'))
-    #return render(request, 'scheduler/index.html')
 
 @login_required
 def scheduleOverride(request):
@@ -145,7 +135,6 @@ def requests(request):
     vacation_request_list = VacationRequest.objects.order_by('startDate')
     shift_request_list = ShiftRequest.objects.order_by('date')
     recurring_shift_request_list = RecurringShiftRequest.objects.order_by('employee')
-    #print recurring_shift_request_list
     template = loader.get_template('scheduler/requests.html')
     context = {
         'vacation_request_list': vacation_request_list,
@@ -298,11 +287,6 @@ def scheduleCoverage(request, date):
                 else:
                     weekdayDict[shift] = [weekSchedule.employee]
 
-        """if weekSchedule.mondayShift in mon:
-            mon[weekSchedule.mondayShift].append(weekSchedule.employee)
-        else:
-            mon[weekSchedule.mondayShift] = [weekSchedule.employee]"""
-
     shiftDict = [shift[0] for shift in SHIFT_CHOICES]
     weekdays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
 
@@ -345,15 +329,11 @@ def editSchedule(request, date):
         return render(request, 'scheduler/edit_schedule.html', context)
 
 def deleteSchedule(selectedWeekStart):
-    # Get week start date from template
-    #selectedWeekStart = request.POST.get("week-start")
-    # Re-format date
-    #selectedWeekStart = datetime.strptime(selectedWeekStart, "%b %d, %Y").strftime("%Y-%m-%d")
     # Get relevant schedules
     selectedWeekSchedules = WeekSchedule.objects.filter(weekStart=selectedWeekStart)
     selectedWeekSchedules.delete()
 
-def logout(request):
+def logOut(request):
     logout(request)
     # Redirect to a success page.
     return HttpResponseRedirect('logged_out.html')    
