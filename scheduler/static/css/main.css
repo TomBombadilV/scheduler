@@ -31,6 +31,10 @@
     src: url('../fonts/markella.otf');
 }
 
+.inline-block {
+    display: inline-block;
+}
+
 /* ------------------------ Login Bar ------------------------- */
 #login-bar {
     /*background-color: #F6F7FB;*/
@@ -437,6 +441,11 @@ select:disabled {
     margin: 0 auto;
 }
 
+.generate-page-button {
+    margin-bottom: 80px;
+    margin-left: 30px;
+}
+
 /* ------------------------ Employee Page ------------------------- */
 #message-div {
     width: 55%;
@@ -711,6 +720,11 @@ body.requests .subtitle {
     height: 20px;
     width: 20px;
     margin-left: 15px;
+
+    -webkit-transition: all 0.2s ease-out;
+    -moz-transition: all 0.2s ease-out;
+    -o-transition: all 0.2s ease-out;
+    transition: all 0.2s ease-out;
 }
 
 .schedule-width {
@@ -719,7 +733,7 @@ body.requests .subtitle {
 }
 
 .schedule-table {
-    margin-bottom: 75px;
+    margin-bottom: 50px;
 }
 
 .schedule-table th {
@@ -739,6 +753,10 @@ body.requests .subtitle {
 .schedule-table select {
     width: 100%;
     height: 30px;;
+}
+
+#schedule-table-original {
+    margin-bottom: 100px;
 }
 
 .no-border {
