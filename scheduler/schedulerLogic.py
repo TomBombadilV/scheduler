@@ -442,8 +442,7 @@ def select( sortedEmployees, randInts, shiftCrew, day, shift, pArr, hoursLeft,
             # Missing a less important shift increases the schedule rating by 1
             else:
                 scheduleRating[0]+=1
-            print(  "Breaking at shift", shift, " on ", 
-                    WEEKDAY_CHOICES[day.dayVal][1] )
+            print "Breaking shift", shift, "on", WEEKDAY_CHOICES[day.dayVal][1]
     return shiftCrew
 
 # Selects all quad members for scheduled quad meeting
@@ -591,9 +590,9 @@ def fillSchedule(weekDays, employees, schedule, hoursLeft, lastWeek, nextWeek):
                 pArr[randomDay.dayVal] = pArr[randomDay.dayVal]/10
                 # Adjust hours left for employee to work
                 hoursLeft[employee]-=7
-            else:
-                print("Something is broken in fillSchedule", employee.firstName, 
-                    hoursLeft[employee], schedule[employee])
+            #else:
+            #    print("Something is broken in fillSchedule", employee.firstName, 
+            #        hoursLeft[employee], schedule[employee])
         # Fill rest of empty schedule with "OFF" days
         for day in weekDays:
             if schedule[employee][day.dayVal]=="":
@@ -772,7 +771,7 @@ def generate(form):
             }
 
     # Number of schedules to be generated and compared
-    regenerate = 10
+    regenerate = 30
 
     # Based on how many shifts the scheduler is not able to fill. 0 is optimal
     scheduleRating = [100]
