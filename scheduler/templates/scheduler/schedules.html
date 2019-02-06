@@ -78,43 +78,75 @@
         </div><!--row-->
     </div><!--container-->
 </body>
-<!--{% include "scheduler/footer.html" %}-->
+{% include "scheduler/footer.html" %}
 
 <script type="text/javascript">
+    // Turn monday into javascript date
     var monday = new Date({{ monday.year }}, {{monday.month}}-1, {{monday.day}});
 
+    // Previous week button
     $("#prev-week").on('click',function(){
        monday.setDate(monday.getDate()-7);
        fillSchedule();
     });
 
+    // Next week button
     $("#next-week").on('click',function(){
        monday.setDate(monday.getDate()+7);
        fillSchedule();
     });
 
+    // Every time the date is changed, update the page
     function fillSchedule(){
-        var options = {year:'numeric', month: 'short', day:'numeric'}
-        document.getElementById("schedule-table-original").innerHTML = "<tr><th>Employee</th><th>Monday</th><th>Tuesday</th><th>Wednesday</th><th>Thursday</th><th>Friday</th><th>Saturday</th><th>Sunday</th></tr>"
-        //document.getElementById("oval-div").innerHTML = monday.toLocaleDateString('en-US', options);
-        document.getElementById("oval-div").value = monday.toLocaleDateString('en-US', options);
-        //document.getElementById("schedule-container").style.height="100%";
-        //console.log(monday);
+        // Options for formatting date
+        var options = {year:'numeric', month: 'short', day:'numeric'};
+        // Document elements
+        $buttonRow = document.getElementById("button-row");
+        $scheduleTable = document.getElementById("schedule-table-original");
+        $scheduleTable = document.getElementById("schedule-table-original");
+        $dateDiv = document.getElementById("oval-div");
+        // Fill date div
+        $dateDiv.value = monday.toLocaleDateString('en-US', options);
+        // Fill schedule table weekday header
+        $scheduleTable.innerHTML = "<tr><th>Employee</th><th>Monday</th><th>\
+            Tuesday</th><th>Wednesday</th><th>Thursday</th><th>Friday</th>\
+            <th>Saturday</th><th>Sunday</th></tr>";
         var hasSchedule = false;
+        // Get relevant weekSchedules
         {% for weekSchedule in weekSchedules %}
-            tempDate = new Date({{weekSchedule.weekStart.year}}, {{weekSchedule.weekStart.month}}-1,{{weekSchedule.weekStart.day}})
-            //console.log(tempDate, monday)
+            tempDate = new Date({{weekSchedule.weekStart.year}}, 
+                {{weekSchedule.weekStart.month}} - 1, 
+                {{weekSchedule.weekStart.day}});
             if ( tempDate.getTime() == monday.getTime()){
-                hasSchedule = true
-                //console.log("{{weekSchedule.mondayShift}}")
-                document.getElementById("button-row").innerHTML = "{% load staticfiles %}<button class='schedule-button logout-button' type='submit' name='coverage'>Coverage</button> <button class='edit-button schedule-button' type='submit' name='edit' onclick='return confirm('Edit Schedule?');'><img src='{% static 'img/edit.png' %}'/></button> <button class='delete-button schedule-button' type='submit' onclick='return confirm('Delete Schedule?');'><img src='{% static 'img/delete.png' %}'/></button>";
-                document.getElementById("schedule-table-original").innerHTML += "<tr><td>{{ weekSchedule.employee }}</td><td>{{ weekSchedule.get_mondayShift_display }}</td><td>{{ weekSchedule.get_tuesdayShift_display }}</td><td>{{ weekSchedule.get_wednesdayShift_display }}</td><td>{{ weekSchedule.get_thursdayShift_display }}</td><td>{{ weekSchedule.get_fridayShift_display }}</td><td>{{ weekSchedule.get_saturdayShift_display }}</td><td>{{ weekSchedule.get_sundayShift_display }}</td></tr>";
+                hasSchedule = true;
+                // Display button row and relevant shifts
+                $buttonRow.innerHTML = "{% load staticfiles %}<button class=\
+                    'schedule-button logout-button' type='submit' name=\
+                    'coverage'>Coverage</button> <button class='edit-button \
+                    schedule-button' type='submit' name='edit' onclick=\
+                    'return confirm('Edit Schedule?');'><img src=\
+                    '{% static 'img/edit.png' %}'/></button> <button class= \
+                    'delete-button schedule-button' type='submit' onclick=\
+                    'return confirm('Delete Schedule?');'><img src=\
+                    '{% static 'img/delete.png' %}'/></button>";
+                $scheduleTable.innerHTML += "<tr><td>{{ weekSchedule.employee }}\
+                    </td><td>{{ weekSchedule.get_mondayShift_display }}</td><td>\
+                    {{ weekSchedule.get_tuesdayShift_display }}</td><td>\
+                    {{ weekSchedule.get_wednesdayShift_display }}</td><td>\
+                    {{ weekSchedule.get_thursdayShift_display }}</td><td>\
+                    {{ weekSchedule.get_fridayShift_display }}</td><td>\
+                    {{ weekSchedule.get_saturdayShift_display }}</td><td>\
+                    {{ weekSchedule.get_sundayShift_display }}</td></tr>";
             }
         {%endfor%}
+        // If there are no relevant weekSchedules, don't display schedule
         if ( hasSchedule == false ){
-            document.getElementById("button-row").innerHTML = "";
-            document.getElementById("schedule-table-original").innerHTML = "<thead class='no-border'><th class='no-border'><p class='warning-text'>No schedule has been generated for this week.</p></th></thead><tr><td class='no-border'><a class='submit-button' href='{% url 'scheduler:index' %}'>Generate</a></td></tr>";
-            //document.getElementById("schedule-container").style.height="100%";
+            $buttonRow.innerHTML = "";
+            $scheduleTable.innerHTML = "<thead class='no-border'><th class=\
+                'no-border'><p class='warning-text'>No schedule has been \
+                generated for this week.</p></th></thead><tr><td class=\
+                'no-border'><a class='submit-button' href=\
+                '{% url 'scheduler:index' %}'>Generate</a></td></tr>";
         }
     };
 </script>
