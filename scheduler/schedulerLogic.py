@@ -26,12 +26,13 @@ class QuadMeeting:
         self.quad = quad
         self.meetingDay = meetingDay
 
+# Makes schedule all pretty
 class Style:
 	BOLD = '\033[1m'
 	UNDERLINE = '\033[4m'
 	END = '\033[0m'
 
-# Get relevant data from form
+# Gets relevant data from form
 def getFormData(form):
     selectedDate = form['currentWeek'].value()
 
@@ -55,34 +56,36 @@ def getFormData(form):
 
     return selectedDate, quadMeetings
 
-# Calculate first day (Monday) and last day (Sunday) for week of current selected date
+# Calculates first day (Monday) and last day (Sunday) for week of selected date
 def calculateWeekRange(selectedDate):
     # Change unicode to datetime
     selectedDate = datetime.datetime.strptime(selectedDate, '%m/%d/%y')
     # Calculate start of week (Monday)
-    weekStart = selectedDate + datetime.timedelta(days=0-selectedDate.weekday())
+    diff = 0 - selectedDate.weekday()
+    weekStart = selectedDate + datetime.timedelta(days = diff)
     # Calculate end of week (Sunday)
     weekEnd = weekStart + datetime.timedelta(days=6)
     weekStart = weekStart.date()
     weekEnd = weekEnd.date()
     return weekStart, weekEnd
 
-# Initialize dictionary of hours left to be worked for the week per employee
+# Initializes dictionary of hours left to be worked for the week per employee
 def initHoursLeft(employees, hoursLeft):
     for employee in employees:
         hoursLeft[employee] = employee.hours
 
-# Initialize dictionary of how many times each employee has opened and closed
+# Initializes dictionary of how many times each employee has opened and closed
 def initOpenCloseCount(employees, openCount, closeCount):
     for employee in employees:
         openCount[employee] = 0
         closeCount[employee] = 0
 
+# Initializes dictionary with empty shift arrays
 def initSchedule(employees, schedule):
     for employee in employees:
         schedule[employee] = ['','','','','','','']
 
-# Set opening and closing shifts for each weekday
+# Sets opening and closing shifts for each weekday
 def initWeekDays(weekDays):
 	for day in range(0,7): 
 		opening, closingShift = "",""
@@ -93,11 +96,11 @@ def initWeekDays(weekDays):
 		elif day==6:	#Sunday opens at 10am, closes at 9pm
 			openingShift, closingShift, openingHour = "8am", "1:30pm", "10am"
 		else:
-			print("There is a problem in initWeekDays().")
+			print("There is a problem in initWeekDays")
 		weekDay = WeekDay(day, openingShift, closingShift, openingHour)
 		weekDays.append(weekDay)
 
-# Sort employees into MODs and Booksellers
+# Sorts employees into MODs and Booksellers
 def initEmployeeLists(employees, mods, booksellers):
     # Employee positions that can act as MOD
     canMod = ["SM", "AM", "SIM", "SLIM"]
@@ -107,84 +110,50 @@ def initEmployeeLists(employees, mods, booksellers):
         else:
             booksellers.append(employee)
 
-#Initialize shift objects for employees. Each employee has one shift for each weekday : 7 shifts + Last Sunday shift = 8 shifts
-""" Removed Shift/Employee foreign key relationship
-def initEmployeeShifts(employees):
-    for employee in employees:
-        for day in WEEKDAY_CHOICES:
-            # day[0] for first part of tuple
-            shift = Shift(employee=employee, weekDay=day[0])
-            shift.save()
-"""
-
-# Check relevant vacation/shift requests and update employee shifts accordingly
+# Checks relevant vacation/shift requests and updates shifts accordingly
 def initRequests(   employees, vacationRequests, shiftRequests, 
                     recurringShiftRequests, weekStart, weekEnd, hoursLeft, 
                     schedule):
     today = datetime.datetime.today().date()
     for request in recurringShiftRequests:
+        # List of full names of days of the week
         weekdayList = list(calendar.day_name)
+        # Get full name of request weekday
         weekday = request.get_weekDay_display()
+        # Get index of request weekday
         weekday = weekdayList.index(weekday)
+        # Add request to schedule
         schedule[request.employee][weekday] = request.shift
-        
-    for request in vacationRequests:
-        #print request.startDate, request.endDate, weekStart, weekEnd
-        #print(weekStart <= request.startDate <= weekEnd)
-        #print(weekStart <= request.endDate <= weekEnd)
-        #print(weekStart > request.startDate and weekEnd < request.endDate)
 
-        # Period of request has already passed
-        #if request.startDate < today and request.endDate < today:
-            #print("Throwing away old request", request.startDate, request.endDate, request.employee.firstName)
-            #request.delete()
+    for request in vacationRequests:
         # Request occurs during selected week
         if (weekStart <= request.startDate <= weekEnd or 
             weekStart <= request.endDate <= weekEnd or 
             weekStart > request.startDate and 
             weekEnd < request.endDate):
-            #print "THIS REQUEST IS ACTIVE"
             #Calculate length of request
             dayCount = (request.endDate - request.startDate).days+1
             # Update employee schedule and hours worked with active request days
-            for currDate in (request.startDate + datetime.timedelta(n) for n in range(dayCount)):
+            for currDate in (   request.startDate + datetime.timedelta(n) for n 
+                                in range(dayCount)):
                 # If date is part of active week
                 if weekStart <= currDate <= weekEnd:
                     weekday = currDate.weekday()
                     # Get corresponding shift
                     schedule[request.employee][weekday] = "V"
-                    #currShift = request.employee.shift_set.get(weekDay=WEEKDAY_CHOICES[weekday][0])
-                    # SHIFT_CHOICES[1][0] is the vacation shift
                     currShift = "V"
-                    #currShift.shift = "V"
-                    #currShift.save()
                     hoursLeft[request.employee] -= 7
-                   # print request.employee.shift_set.all()
-        # Request is not relevant to selected week
-        #else:
-        #    pass
 
     for request in shiftRequests:
         # Request occurs during selected week
         if weekStart <= request.date <= weekEnd:
-            #print "THIS REQUEST IS ACTIVE"
             weekday = request.date.weekday()
-            #print(weekday)
-            #currShift = request.employee.shift_set.get(weekDay=WEEKDAY_CHOICES[weekday][0])
             schedule[request.employee][weekday] = request.shift
-            #currShift.shift = request.shift
-            #currShift.save()
-            # If request is for a specific shift 
-            #if not request.shift=="OFF":
-            #    hoursLeft[request.employee] -= 7
-            #print request.employee.shift_set.all()
-        # Request is not relevant to selected week
-        #else:
-        #    pass
     
     return schedule
 
-# Takes each day shift from weekSchedule object and puts into an array (for indexing)
+# Takes each day shift from weekSchedule object and puts into an array (for 
+# indexing)
 def weekScheduleToArray(weekSchedule, lastOrNextWeek, employee):
     lastOrNextWeek[employee] = []
     if weekSchedule:
@@ -196,24 +165,24 @@ def weekScheduleToArray(weekSchedule, lastOrNextWeek, employee):
         lastOrNextWeek[employee].append(weekSchedule.saturdayShift)
         lastOrNextWeek[employee].append(weekSchedule.sundayShift)
     else:
+        # If no schedule, then fill with empty array
         lastOrNextWeek[employee] = ['']*7
     return lastOrNextWeek
 
-# Check if schedules for last week and next week exist. Save shifts
+# Checks if schedules for last week and next week exist. Saves shifts in arrays
 def initSurroundingShifts(employees, schedules, lastWeek, nextWeek, weekStart):
     lastWeekStart = weekStart - datetime.timedelta(days=7)
     nextWeekStart = weekStart + datetime.timedelta(days=7)
     lastWeekScheduleSet = schedules.filter(weekStart=lastWeekStart)
     nextWeekScheduleSet = schedules.filter(weekStart=nextWeekStart)
     if lastWeekScheduleSet:
-        #print("IT EXISTS FOR LAST WEEK")
         for employee in employees:
-            # There should only be one. "first()" is to get it out of the query set. This is a WeekSchedule object
+            # There should only be one. "first()" is to get it out of the query 
+            # set. This is a WeekSchedule object
             employeeLastWeek = lastWeekScheduleSet.filter(employee=employee).first()
-            # So we can index the schedules
+            # Turn into array so we can index the schedules
             weekScheduleToArray(employeeLastWeek, lastWeek, employee)
     if nextWeekScheduleSet:
-        print("IT EXISTS FOR NEXT WEEK")
         for employee in employees:
             employeeNextWeek = nextWeekScheduleSet.filter(employee=employee).first()   
             weekScheduleToArray(employeeNextWeek, nextWeek, employee)
@@ -229,14 +198,14 @@ def initialize( selectedDate, weekDays, employees, mods, booksellers,
     initSchedule(employees, schedule)
     initWeekDays(weekDays)
     initEmployeeLists(employees, mods, booksellers)
-    #initEmployeeShifts(employees)
     initRequests(   employees, vacationRequests, shiftRequests, 
                     recurringShiftRequests, weekStart, weekEnd, hoursLeft, 
                     schedule)
     initSurroundingShifts(employees, schedules, lastWeek, nextWeek, weekStart)
     return weekStart, weekEnd
 
-# Check if anyone specifically requested this shift. Returns list of employees who requested this shift.
+# Checks if anyone specifically requested this shift. Returns list of employees
+# who requested this shift.
 def checkRequests(day, shift, modCount, booksellerCount, employees, mods, schedule):
     shiftEmployees = []
     for employee in employees:
@@ -249,9 +218,11 @@ def checkRequests(day, shift, modCount, booksellerCount, employees, mods, schedu
             shiftEmployees.append(employee)
     return shiftEmployees, modCount, booksellerCount
 
-# Create sorted array (MOD or BS) (sorted by whether employee has worked this shift before or not) and probability array (MOD or BS) 
+# Creates sorted array (MOD or BS) (sorted by whether employee has worked this 
+# shift before or not) and probability array (MOD or BS) 
 def calculateProbability(employees, countDict):
-    # Sort list of employees by how many times they are already scheduled for this shift
+    # Sort list of employees by how many times they have already been scheduled 
+    # for this shift
     sortedEmployees = sorted(employees, key=lambda x:countDict[x])
     # Number of employees scheduled for this shift once
     onceCount = 0
@@ -263,18 +234,23 @@ def calculateProbability(employees, countDict):
     for employee in employees:
 		if countDict[employee] > 1:
 			moreThanOnceCount+=1
-    # If every employee in the list has already worked this shift before, then it evens out again
+    # If every employee in the list has already worked this shift before, then 
+    # it evens out again
     if onceCount+moreThanOnceCount == len(employees):
         onceCount = moreThanOnceCount
         moreThanOnceCount = 0
         for employee in employees:
 		    countDict[employee] -= 1
-    # If employee has worked this shift once, their probability of getting scheduled for it again tenths
+    # If employee has worked this shift once, their probability of getting 
+    # scheduled for it again tenths
     pOnce = float(0.1)/len(employees)
-    # If employee has worked this shift more than once, their probability of getting scheduled for it again hundredths
+    # If employee has worked this shift more than once, their probability of 
+    # getting scheduled for it again hundredths
     pMoreThanOnce = float(0.01)/len(employees) 
     # Probability for employees who haven't worked this shift yet
-    pNever = (1-((pOnce*onceCount)+(pMoreThanOnce*moreThanOnceCount)))/(len(employees)-(onceCount+moreThanOnceCount))
+    pNeverDvd = 1 - ((pOnce * onceCount) + (pMoreThanOnce * moreThanOnceCount))
+    pNeverDivisor = len(employees) - (onceCount + moreThanOnceCount)
+    pNever =  pNeverDvd / pNeverDivisor 
     #Probability array corresponding to sorted employee list
     pEmployeeArr = []
     # Fill probability array
@@ -286,100 +262,98 @@ def calculateProbability(employees, countDict):
         pEmployeeArr.append(pMoreThanOnce)
     return sortedEmployees, pEmployeeArr
 
-# Calculate how many days worked either before or after given day based on beforeOrAfter boolean flag
-def calculateDaysBeforeOrAfter(dayVal, employeeSchedule, daysWorked, beforeOrAfter):
-    notWorking = ["OFF", "", "V"]
+# Calculate how many days worked either before or after given day 
+# beforeOrAfter is True if before, False if after
+def calculateDaysInARow( dayVal, employeeSchedule, daysWorked, 
+                                beforeOrAfter):
+    offShifts = ["", "OFF", "V"]
     currShift = employeeSchedule[dayVal]
-    # If before, we're counting down. If after, we're counting up.
+    # Check if current day is still in the range of this week
     dayLimit = dayVal >= 0 if beforeOrAfter else dayVal < 6
-    while currShift not in notWorking and dayLimit:
+    while currShift not in offShifts and dayLimit:
+        # If day is within the week and wasn't off, increase days in a row 
         daysWorked+=1
+        # If before, count down. If after, count up
         dayVal = dayVal-1 if beforeOrAfter else dayVal+1
         currShift = employeeSchedule[dayVal]
+        # Check if current day is still in the range of this week
         dayLimit = dayVal >= 0 if beforeOrAfter else dayVal < 6
     return daysWorked
 
-# Calculates how many days in a row employee has been working
-def calculateDaysInARow(employee, day, schedule, lastWeek, nextWeek):
+# Checks if working given day will cause employee to work > 5 days in a row
+def checkDaysInARow(employee, day, schedule, lastWeek, nextWeek):
+    # Day being scheduled
     today = day.dayVal
     daysWorkedBefore = 0
     daysWorkedAfter = 0
     # Calculate days worked before today in current schedule    
     if today > 0:
         dayVal = today-1
-        """currShift = schedule[employee][dayVal]
-        while currShift and dayVal >= 0:
-            daysWorkedBefore+=1
-            dayVal-=1
-            currShift = schedule[employee][dayVal]
-        print "daysWorkedBefore", today, daysWorkedBefore"""
-        daysWorkedBefore = calculateDaysBeforeOrAfter(dayVal, schedule[employee], daysWorkedBefore, True)
+        daysWorkedBefore = calculateDaysInARow( dayVal, schedule[employee], 
+                                                daysWorkedBefore, True)
+    # Calculate days worked after today in current schedule
     if today < 6:
         dayVal = today+1
-        """currShift = schedule[employee][dayVal]
-        while currShift and dayVal <6:
-            daysWorkedAfter+=1
-            dayVal+=1
-            currShift = schedule[employee][dayVal]"""
-        daysWorkedAfter = calculateDaysBeforeOrAfter(dayVal, schedule[employee], daysWorkedAfter, False)
-
+        daysWorkedAfter = calculateDaysInARow(  dayVal, schedule[employee], 
+                                                daysWorkedAfter, False)
     # If we have a schedule for last week AND this person has worked every day 
     # this week before today, then check days worked last week
     if lastWeek and daysWorkedBefore == today:
         dayVal = 6 # Sunday
-        daysWorkedBefore = calculateDaysBeforeOrAfter(dayVal, lastWeek[employee], daysWorkedBefore, True)
-        """currShift = lastWeek[employee][dayVal]
-        while currShift and dayVal >= 0:
-            daysWorkedBefore+=1
-            dayVal-=1
-            currShift = lastWeek[employee][dayVal]"""
+        daysWorkedBefore = calculateDaysInARow( dayVal, lastWeek[employee], 
+                                                daysWorkedBefore, True)
     # If we have a schedule for next week AND this person works every day this
     # week after today, then check next week
-    if nextWeek and daysWorkedAfter == 6-today:
+    if nextWeek and daysWorkedAfter == 6 - today:
         dayVal = 0 # Monday
-        daysWorkedAfter = calculateDaysBeforeOrAfter(dayVal, nextWeek[employee], daysWorkedAfter, False)
-        """currShift = nextWeek[employee][dayVal]
-        daysWorkedAfter = 0
-        while currShift and dayVal <= 6:
-            daysWorkedAfter+=1
-            dayVal+=1
-            currShift = nextWeek[employee][dayVal]"""
-    #print daysWorkedBefore, daysWorkedAfter, today, schedule[employee]
-    if daysWorkedBefore+daysWorkedAfter >= 5:
+        daysWorkedAfter = calculateDaysInARow(  dayVal, nextWeek[employee], 
+                                                daysWorkedAfter, False)
+    # Days worked in a row will be days before + days after + selected day
+    totalDaysWorked = daysWorkedBefore + daysWorkedAfter
+    if totalDaysWorked >= 5:
         return False
     else:
         return True
 
-# Get the shift prior to today's shift
+# Gets the ending hour of the shift prior to today's shift
 def getPreviousShift(employee, day, schedule, lastWeek):
+    # Yesterday is part of last week's schedule
     if day.dayVal==0:
-        # If employee had a shift last Sunday
+        # Employee has a schedule for last week
         if lastWeek:
             prevShift = lastWeek[employee][6]
-        #If employee didn't work here last week therefore doesn't have a shift last Sunday
+        # Employee doesn't have a schedule for last week
         else:
-            prevShift = "" # 0 is value representative of not having worked that day
+            prevShift = "" 
+    # Yesterday is part of this week's schedule
     else:
+        # Get yesterday's shift from this week's schedule
         prevShift = schedule[employee][day.dayVal-1]
-    prevShift = 0 if prevShift == "V" or prevShift == "OFF" else parser.parse(prevShift).hour
+    # Get ending hour of shift (Minimum value if shift is empty, V, or OFF)
+    offShifts = ["", "V", "OFF"]
+    prevShift = 0 if prevShift in offShifts else parser.parse(prevShift).hour
     return prevShift
 
-# Get the shift after today's shift
+# Gets the starting hour of the shift after today's shift
 def getNextShift(employee, day, schedule, nextWeek):
-    # If it's the last day of the week
+    # Tomorrow is part of next week's schedule
     if day.dayVal==6:
-        # If employee has a shift next Monday
+        # Employee has a schedule for next week
         if nextWeek:
             nextShift = nextWeek[employee][0]
-        #If employee doesn't work next week therefore doesn't have a shift next Monday
+        # Employee doesn't have a schedule for next week
         else: 
             nextShift = ""
+    # Tomorrow is part of this week's schedule
     else:
+        # Get tomorrow's shift from current schedule
         nextShift = schedule[employee][day.dayVal+1]
-    nextShift = 24 if nextShift=="" or nextShift=="V" or nextShift=="OFF" else parser.parse(nextShift).hour
+    # Get starting hour of shift (Maximum value if shift is empty, V, or OFF)
+    offShifts = ["", "V", "OFF"]
+    nextShift = 24 if nextShift in offShifts else parser.parse(nextShift).hour
     return nextShift
 
-# Calculate time between previous shift and current shift
+# Calculates time between previous shift and current shift
 def sufficientTimeSincePrevShift(prevShift, currShift):
     # Shift is 8 hours long
     endOfPrevShift = prevShift+8
@@ -391,7 +365,7 @@ def sufficientTimeSincePrevShift(prevShift, currShift):
     else:
         return False
 
-# Calculate time between current shift and next shift
+# Calculates time between current shift and next shift
 def sufficientTimeBeforeNextShift(nextShift, currShift):
     # Shift is 8 hours long
     endOfCurrShift = currShift+8
@@ -403,7 +377,12 @@ def sufficientTimeBeforeNextShift(nextShift, currShift):
     else:
         return False
 
-# Where all of the scheduling constraints are. Time between shifts, if they're already scheduled, etc.
+# Where all of the scheduling constraints are. 
+# The constraints implemented here are:
+# 1) Time between shifts must be at least 12 hours
+# 2) Employee can't be already scheduled for another shift
+# 3) Employee can't have worked full hours for the week
+# 4) Employee can't work for more than 5 days in a row
 def canWork(employee, day, shift, hoursLeft, schedule, lastWeek, nextWeek):
     available = False
     # If employee is not scheduled for a shift already
@@ -413,106 +392,79 @@ def canWork(employee, day, shift, hoursLeft, schedule, lastWeek, nextWeek):
         # Get and parse shift for the following day if it exists
         nextShift = getNextShift(employee, day, schedule, nextWeek)
         shift = parser.parse(shift).hour
-        # Calculate time between prevShift and current shift. Should be at least 12 hours
+        # Calculate time between prevShift and current shift. Must be >=12hours
         if sufficientTimeSincePrevShift(prevShift, shift):
-            # Calculate time between next Shift and current shift. Should be at least 12 hours
+            # Calculate time between next and current shift. Must be >=12hours
             if sufficientTimeBeforeNextShift(nextShift, shift):
                 if hoursLeft[employee] > 0:
-                    # Calculate how many days in a row the employee will work if scheduled today
-                    if calculateDaysInARow(employee, day, schedule, lastWeek, nextWeek):
+                    # Check how many days in a row the employee will work if 
+                    # scheduled today
+                    if checkDaysInARow( employee, day, schedule, lastWeek, 
+                                        nextWeek):
                         available = True
-    """                else:
-                        print(employee.firstName, "will have worked more than 5 days in a row.")
-                else:
-                    print(employee.firstName, "has already worked full hours this week.")
-            else:
-                print(employee.firstName, "has less than 12 hours between this shift and next shift")
-        else:
-            print(employee.firstName, "has less than 12 hours between this shift and previous shift")
-    else:
-        print(employee.firstName, " is already scheduled to work on", WEEKDAY_CHOICES[day.dayVal][1])"""
-    #if not available:
-    #    print(employee, " can't work ",shift, " on ", WEEKDAY_CHOICES[day.dayVal][1])
-    #else:
-    #    print employee, "can work", shift, "on", WEEKDAY_CHOICES[day.dayVal][1]
     return available
 
-# Check if selected employees can work this shift. If not, choose another. Update schedule, add to employee crew list
+# Checks if selected employees can work this shift and returns list of selected 
+# employees. This is also where schedule rating happens
 def select( sortedEmployees, randInts, shiftCrew, day, shift, pArr, hoursLeft, 
             schedule, lastWeek, nextWeek, scheduleRating):
+    # randInts is the array of randomly generated ints corresponding to employees
     for r in randInts:
+        # Counts how many times the selected employee has been unable to work
         counter = 0
         broken = False
+        # Get randomly selected employee
         curr = sortedEmployees[r]
-        # If selected employee is not available for this shift, select another
-        while not(canWork(curr, day, shift, hoursLeft, schedule, lastWeek, nextWeek)):
-            #print "counter incrementing ", counter
+        # If selected employee can't work this shift, select another
+        while not(  canWork(curr, day, shift, hoursLeft, schedule, lastWeek, 
+                    nextWeek)   ):        
+            # If counter gets to 50, it is safe to say there are no available 
+            # employees to work this shift
             counter+=1
             if counter > 50:
                 broken = True
                 break
+            # Select another employee
             rand = np.random.choice(len(sortedEmployees),1,p=pArr)
             curr = sortedEmployees[rand[0]]
-			#print(curr.firstName, pArr[r[0]])
+        # The selected employee can work this shift
         if not broken:
             shiftCrew.append(curr)
             schedule[curr][day.dayVal] = shift
-            #hoursLeft[curr]-=7
+        # Broken! No one is available for this shift. Update schedule rating
         else:
             # Opening shifts and closing shifts most important
-            requiredShifts = ["7am", "7:30am", "8am", "1:30pm", "2:30pm", "3:30pm"]
+            requiredShifts = [  "7am", "7:30am", "8am", "1:30pm", "2:30pm", 
+                                "3:30pm" ]
+            # Missing a required shift increases the schedule rating by 10
             if shift in requiredShifts:
                 scheduleRating[0]+=10
+            # Missing a less important shift increases the schedule rating by 1
             else:
                 scheduleRating[0]+=1
-            print "Breaking at shift", shift, " on ", WEEKDAY_CHOICES[day.dayVal][1], counter
+            print(  "Breaking at shift", shift, " on ", 
+                    WEEKDAY_CHOICES[day.dayVal][1] )
     return shiftCrew
 
-# Select all quad members for scheduled quad meeting
+# Selects all quad members for scheduled quad meeting
 def selectQuad(quad, day, employees, schedule, hoursLeft, lastWeek, nextWeek):
     quad = int(quad)
     # Quad meetings are at 6am
     shift = "6am"
-    # Check if quad members can work this shift. If not, print message
+    # Check if quad members can work this shift. If so, schedule them.
     for employee in employees:
         if employee.quad == int(quad):
-            if canWork(employee, day, shift, hoursLeft, schedule, lastWeek, nextWeek):
+            if canWork( employee, day, shift, hoursLeft, schedule, lastWeek, 
+                        nextWeek):
                 schedule[employee][day.dayVal] = shift
                 hoursLeft[employee] -= 7
             else:
-                print(employee.firstName, 
-                " isn't available for a quad meeting on ", 
-                WEEKDAY_CHOICES[day.dayVal][1], 
-                ". Please choose another one.")
+                print(  employee.firstName, 
+                        " isn't available for a quad meeting on ", 
+                        WEEKDAY_CHOICES[day.dayVal][1], 
+                        ". Please choose another one.")
 
-"""
-# Select opening crew for the day
-def selectOpen(day, employees, mods, booksellers, schedule, openCount, closeCount, hoursLeft):
-    # Number of MODs and Booksellers that have been scheduled for this shift
-    modCount, booksellerCount = 0, 0
-    # Number of MODs and Booksellers that need to be scheduled for this shift
-    numMods, numBooksellers = 1, 2
-    # Add employees who have requested to open to the opening crew
-    openingCrew, modCount, booksellerCount = checkRequests(day, day.openingShift, modCount, booksellerCount, employees, mods, schedule)
-    
-    sortedMods, pModArr = calculateProbability(mods, openCount)
-    sortedBooksellers, pBooksellerArr = calculateProbability(booksellers, openCount)
-
-    # Generate weighted "random" numbers using the probability arrays (these are arrays of numbers)
-    randModInts = np.random.choice(len(mods), numMods-modCount, p=pModArr) 
-    randBooksellerInts = np.random.choice(len(booksellers), numBooksellers-booksellerCount, p=pBooksellerArr)
-    
-    openingCrew = select(   sortedMods, randModInts, openingCrew, day, 
-                            day.openingShift, pModArr, hoursLeft, schedule)
-    openingCrew = select(   sortedBooksellers, randBooksellerInts, openingCrew, 
-                            day, day.openingShift, pBooksellerArr, hoursLeft, schedule)
-    
-    for employee in openingCrew:
-        openCount[employee]+=1
-        hoursLeft[employee]-=7
-    """
-
-# Select shift crew for the day (opening and closing)
+# Selects opening or closing crew for the day
 def selectShiftCrew(day, shift, employees, mods, booksellers, schedule,
                     lastWeek, nextWeek, shiftCount, hoursLeft, numMods, 
                     numBooksellers, scheduleRating):
@@ -520,12 +472,16 @@ def selectShiftCrew(day, shift, employees, mods, booksellers, schedule,
     modCount, booksellerCount = 0, 0
 
     # Add employees who have requested to open to the opening crew
-    shiftCrew, modCount, booksellerCount = checkRequests(  day, shift, modCount, booksellerCount, employees, 
-                                mods, schedule)
+    shiftCrew, modCount, booksellerCount = checkRequests(   day, shift, modCount, 
+                                                            booksellerCount, 
+                                                            employees, mods, 
+                                                            schedule )
     
+    # Calculate probability array of how likely each employee is to be selected 
+    # for this shift based on how many times they have already worked it
     sortedMods, pModArr = calculateProbability(mods, shiftCount)
     sortedBooksellers, pBooksellerArr = calculateProbability(   booksellers, 
-                                                                shiftCount)
+                                                                shiftCount )
 
     # Generate arrays of weighted "random" numbers using the probability arrays
     randModInts = np.random.choice(len(mods), numMods-modCount, p=pModArr) 
@@ -533,36 +489,44 @@ def selectShiftCrew(day, shift, employees, mods, booksellers, schedule,
                                             numBooksellers-booksellerCount, 
                                             p=pBooksellerArr)
 
+    # Select 'em
     shiftCrew = select( sortedMods, randModInts, shiftCrew, day, shift, 
                         pModArr, hoursLeft, schedule, lastWeek, nextWeek, scheduleRating)
     shiftCrew = select( sortedBooksellers, randBooksellerInts, shiftCrew, day, 
                         shift, pBooksellerArr, hoursLeft, schedule,
                         lastWeek, nextWeek, scheduleRating)
     
+    # Adjust count of how many times each employee has worked this shift and 
+    # how many more hours they need to work
     for employee in shiftCrew:
         shiftCount[employee]+=1
         hoursLeft[employee]-=7
 
-    #print WEEKDAY_CHOICES[day.dayVal][1], shiftCrew, len(shiftCrew), numBooksellers
-
-# Select mid crew. Differs from selectShiftCrew() in enough respects to warrant its own method
+# Selects mid crew. Used for selecting any group of employees that is not 
+# working a 6-2, opening, or closing shift. Differs from selectShiftCrew() in
+# enough respects to warrant its own method.
 def selectMids( day, employees, shift, mods, booksellers, schedule, lastWeek, 
                 nextWeek, hoursLeft, numMods, numBooksellers, scheduleRating):
     # Number of MODs and Booksellers that have been scheduled for this shift
     modCount, booksellerCount = 0, 0
 
     # Add employees who have requested to open to the opening crew
-    shiftCrew, modCount, booksellerCount = checkRequests(  day, shift, modCount, booksellerCount, employees, 
-                                mods, schedule)
+    shiftCrew, modCount, booksellerCount = checkRequests(   day, shift, 
+                                                            modCount,
+                                                            booksellerCount, 
+                                                            employees, mods, 
+                                                            schedule)
 
     # Generate arrays of random numbers corresponding to employees
     randModInts = random.sample(range(0, len(mods)), numMods-modCount)
-    randBooksellerInts = random.sample(range(0, len(booksellers)), numBooksellers-booksellerCount)
+    randBooksellerInts = random.sample( range(0, len(booksellers)), 
+                                        numBooksellers - booksellerCount)
 
     # Generate even pModArr so we can re-use "select" method
     pModArr = [float(1)/len(mods)]*len(mods)
     pBooksellerArr = [float(1)/len(booksellers)]*len(booksellers)
 
+    # Select 'em
     shiftCrew = select( mods, randModInts, shiftCrew, day, shift, 
                         pModArr, hoursLeft, schedule, lastWeek, 
                         nextWeek, scheduleRating)
@@ -570,90 +534,89 @@ def selectMids( day, employees, shift, mods, booksellers, schedule, lastWeek,
                         shift, pBooksellerArr, hoursLeft, schedule,
                         lastWeek, nextWeek, scheduleRating)
     
+    # Adjust hours left to work this week
     for employee in shiftCrew:
         hoursLeft[employee]-=7
 
-# Check if quad meeting is scheduled to happen for this day
-def quadMeetingToday(day, quadMeetings):
+# Checks if quad meeting is scheduled to happen for this day. Assumes that there
+# is at most one quad meeting per day
+def quadMtngToday(day, quadMeetings):
     today = WEEKDAY_CHOICES[day.dayVal][0]
     for quad in quadMeetings:
             if quadMeetings[quad]==today:
                 return True, quad
     return False, None
 
-# Get probability array for unscheduled days only
+# Calculates probability array for unscheduled days only. Prompts the scheduler
+# to choose a day with less people scheduled
 def getRelevantPArr(employeeCountArr, pArr, unscheduledDays):
     relevantPArr = []
     for day in unscheduledDays:
         relevantPArr.append(pArr[day.dayVal])
-    #print("pArr: ", pArr, "relevantPARR: ", relevantPArr)
+    # Need sum to make probability array add up to 100
     sumArr = sum(relevantPArr)
     for i, p in enumerate(relevantPArr):
+        # Maff
         relevantPArr[i] = float(p)/sumArr
-    #print relevantPArr
     return relevantPArr
 
-# Make sure everyone is working their full hours
+# Makes sure everyone is working their full hours and fills "OFF" days
+# Keeps distribution of "extra" mids as even as possible with a probability array
 def fillSchedule(weekDays, employees, schedule, hoursLeft, lastWeek, nextWeek):
-    # Array of count of extra mids per weekday
-    employeeCountArr = [0 for i in range(7)]
+    # Number of extra mids scheduled per weekday. 
+    numWorkingArr = [0 for i in range(7)]
     # Probability array starts out even
     pArr = [float(100)/7 for i in range(7)]
     for employee in employees:
-        # Should be divisible by 7, but if it isn't, we'll ignore the extra hours
+        # Should be divisible by 7, but if not, we'll ignore the extra hours
+        # While employee hasn't worked full hours
         while hoursLeft[employee]/7 > 0:
-            # Fill array with indices of unscheduled days
+            # Get indices of unscheduled days
             unscheduledDays = []
             for day in weekDays:
+                # If employee is not scheduled for this day
                 if schedule[employee][day.dayVal]=="":
                     unscheduledDays.append(day)
-            relevantPArr = getRelevantPArr(employeeCountArr, pArr, unscheduledDays)
+            # Get probability array ONLY for unscheduled days
+            relevantPArr = getRelevantPArr(numWorkingArr, pArr, unscheduledDays)
+            # Choose random unscheduled day
             randomDay = np.random.choice(unscheduledDays, 1, p=relevantPArr)[0]
-            #print(relevantPArr, randomDay.dayVal)
-            #for day in unscheduledDays:
-            #    print day.dayVal
-            #randomDay = random.randint(0, len(unscheduledDays)-1)
-            #randomDay = unscheduledDays[randomDay]
-            #print randomDay, randomDay
-            if canWork(employee, randomDay, "11am", hoursLeft, schedule, lastWeek, nextWeek):
+            # Make sure employee can actually work that day
+            if canWork( employee, randomDay, "11am", hoursLeft, schedule, 
+                        lastWeek, nextWeek):
                 schedule[employee][randomDay.dayVal] = "11am"
-                # Increase count of employees chosen for this day
-                employeeCountArr[randomDay.dayVal]+=1
+                # Increase count of employees scheduled for this day
+                numWorkingArr[randomDay.dayVal]+=1
                 # Halve the probability of this day getting chosen again
                 pArr[randomDay.dayVal] = pArr[randomDay.dayVal]/10
+                # Adjust hours left for employee to work
                 hoursLeft[employee]-=7
-            """else:
-                print "PROBLEMS!!! AHHHHH", employee.firstName, hoursLeft[employee], schedule[employee]
-                for x in unscheduledDays:
-                    print x.dayVal"""
-            #print employee.firstName, hoursLeft[employee], unscheduledDays, randomDay
+            else:
+                print("Something is broken in fillSchedule", employee.firstName, 
+                    hoursLeft[employee], schedule[employee])
+        # Fill rest of empty schedule with "OFF" days
         for day in weekDays:
             if schedule[employee][day.dayVal]=="":
                 schedule[employee][day.dayVal]="OFF"
-    print pArr
 
-
-# All the brains are here! Filling out the schedule by priority
-def createSchedule( weekStart, weekEnd, quadMeetings, weekDays, employees, 
+# All the brains are here! Fills out the schedule by priority
+def createSchedule( weekStart, weekEnd, quadMtngs, weekDays, employees, 
                     mods, booksellers, vacationRequests, shiftRequests, 
                     recurringShiftRequests, hoursLeft, openCount, closeCount,
                     lastWeek, nextWeek, schedules, schedule, scheduleRating):
 
     for day in weekDays:
-        """
-        for quad in quadMeetings:
-            # If quad meeting is scheduled to happen for this day
-            if quadMeetings[quad]==WEEKDAY_CHOICES[day.dayVal][0]:
-                selectQuad(quad, day, employees, schedule, hoursLeft)
-        """
-        quadIsMeeting, quad = quadMeetingToday(day, quadMeetings)
+        # Check if quad is meeting today, and if so, which one
+        quadIsMeeting, quad = quadMtngToday(day, quadMtngs)
         if quadIsMeeting:
             selectQuad(quad, day, employees, schedule, hoursLeft, lastWeek, nextWeek)
  
     for day in weekDays:
         #Needs to be here so it resets every day
-        # Number of MODs and Booksellers that need to be scheduled for opening
-        numModsOpening, numBooksellersOpening = 1, 1 if quadMeetingToday(day, quadMeetings)[0] else 2
+        # Number of MODs that need to be scheduled for opening
+        numModsOpening = 1
+        # Number of Booksellers that need to be scheduled for opening
+        numBSOpening = 1 if quadMtngToday(day, quadMtngs)[0] else 2
         # Number of MODs and Booksellers that need to be scheduled for closing
         numModsClosing, numBooksellersClosing = 1, 3
 
@@ -667,7 +630,7 @@ def createSchedule( weekStart, weekEnd, quadMeetings, weekDays, employees,
         # Select opening crew
         selectShiftCrew(day, day.openingShift, employees, mods, booksellers, 
                         schedule, lastWeek, nextWeek, openCount, hoursLeft, 
-                        numModsOpening, numBooksellersOpening, scheduleRating)
+                        numModsOpening, numBSOpening, scheduleRating)
 
         # Reinstate Paul
         booksellers.append(paul)
@@ -680,7 +643,7 @@ def createSchedule( weekStart, weekEnd, quadMeetings, weekDays, employees,
                 booksellers.remove(bookseller)
 
         # Select closing crew
-        selectShiftCrew(day, day.closingShift, employees, mods, booksellers, 
+        selectShiftCrew(day, day.closingShift, employees, mods, booksellers,
                         schedule, lastWeek, nextWeek, closeCount, hoursLeft,
                         numModsClosing, numBooksellersClosing, scheduleRating)
 
@@ -692,23 +655,25 @@ def createSchedule( weekStart, weekEnd, quadMeetings, weekDays, employees,
         # Number of Booksellers coming in when the store opens
         numBooksellersOpenMid = 2 if day.dayVal==5 or day.dayVal==6 else 1
         # Number of MODs and Booksellers coming in at 11am
-        #numModsMid, numBooksellersMid = 1, 2 if quadMeetingToday(day, quadMeetings)[0] else 3
-        numModsMid, numBooksellersMid = 1, 1 if quadMeetingToday(day, quadMeetings)[0] else 2
+        numModsMid, numBSMid = 1, 1 if quadMtngToday(day, quadMtngs)[0] else 2
         # Number of MODs coming in at 12pm (only on Fri, Sat, Sun)
-        numModsNoon = 1 if day.dayVal==4 or day.dayVal==5 or day.dayVal==6 else 0
+        numModsNoon = 1 if day.dayVal >= 4 else 0
         # Select mids coming in at opening time
-        selectMids( day, employees, day.openingHour, mods, booksellers, schedule, 
-                    lastWeek, nextWeek, hoursLeft, 0, numBooksellersOpenMid, scheduleRating)
+        selectMids( day, employees, day.openingHour, mods, booksellers, 
+                    schedule, lastWeek, nextWeek, hoursLeft, 0, 
+                    numBooksellersOpenMid, scheduleRating )
         # Select mids coming in at 11am
         selectMids( day, employees, "11am", mods, booksellers, schedule, 
-                    lastWeek, nextWeek, hoursLeft, numModsMid, 
-                    numBooksellersMid, scheduleRating)
+                    lastWeek, nextWeek, hoursLeft, numModsMid, numBSMid, 
+                    scheduleRating )
         # Select mid MODs coming in at 12pm
         selectMids( day, employees, "12pm", mods, booksellers, schedule, 
-                    lastWeek, nextWeek, hoursLeft, numModsNoon, 0, scheduleRating)
+                    lastWeek, nextWeek, hoursLeft, numModsNoon, 0, 
+                    scheduleRating )
+    # Fill remaining schedule for people aren't working their full hours
     fillSchedule(weekDays, employees, schedule, hoursLeft, lastWeek, nextWeek)
 
-# Save generated schedule in database for review        
+# Saves generated schedule in database temporarily for review
 def saveSchedule(weekStart, employees, schedule):
     TempSchedule.objects.all().delete()
     for employee in employees:
@@ -723,12 +688,15 @@ def saveSchedule(weekStart, employees, schedule):
                                     sundayShift=schedule[employee][6])
         weekSchedule.save()
 
-# Temporary. To see the schedule        
-def printSchedule(  employees, schedule, hoursLeft, openCount, closeCount, 
-                    selectedDate):
-    print("------------------------------------------------------------------------------------------------------------------------------------")
-    print("                                                  HPB SCHEDULE FOR THE WEEK OF", selectedDate)
-    print("------------------------------------------------------------------------------------------------------------------------------------")
+# Prints out schedule all pretty  
+def printSchedule(  employees, schedule, selectedDate, hoursLeft=None, 
+                    openCount=None, closeCount=None ):
+    print( ("-------------------------------------------------------------------"
+            "-------------------------------------------------------"))
+    print( ("                                    HPB SCHEDULE FOR THE WEEK OF"),
+            selectedDate)
+    print( ("-------------------------------------------------------------------"
+            "-------------------------------------------------------"))
     maxLen = 0
     # Pad names with whitespace
     for employee in employees:
@@ -741,18 +709,17 @@ def printSchedule(  employees, schedule, hoursLeft, openCount, closeCount,
         print'| ',
         for shift in schedule[employee]:
             print shift.center(10, " "),
-			#print(timeToShift(shift).center(15," ")),
-        print str(hoursLeft[employee]).ljust(3),
-        print openCount[employee],
-        print closeCount[employee]
+        print str(hoursLeft[employee]).ljust(3) if hoursLeft else "",
+        print openCount[employee] if openCount else "",
+        print closeCount[employee] if closeCount else ""
 
-#def terminateShifts():  
-#    Shift.objects.all().delete()
-
-def generatePotentialSchedule(employees, vacationRequests, shiftRequests, recurringShiftRequests, schedules, selectedDate, quadMeetings):
+# Initializes schedule-specific variables and generates a single schedule
+def generateSchedule(   employees, vacationRequests, shiftRequests, 
+                        recurringShiftRequests, schedules, selectedDate, 
+                        quadMeetings):
+    weekDays = []
     mods = []
     booksellers = []
-    weekDays = []
     hoursLeft = {}
     openCount = {}
     closeCount = {}
@@ -780,151 +747,49 @@ def generatePotentialSchedule(employees, vacationRequests, shiftRequests, recurr
 
     weekStart, weekEnd = initialize(selectedDate, **params)
     createSchedule(weekStart, weekEnd, quadMeetings, **params)
-
-    print("SCHEDULE RATING: ", scheduleRating)
-
     return schedule, scheduleRating, weekStart
 
+# Takes in form input and model data, runs schedule generation and selects 
+# optimal schedule
 def generate(form):
+    # Initialize model data
     employees = Employee.objects.all()
     vacationRequests = VacationRequest.objects.all()
     shiftRequests = ShiftRequest.objects.all()
     recurringShiftRequests = RecurringShiftRequest.objects.all()
     schedules = WeekSchedule.objects.all()
 
+    # Initialize form data
     selectedDate, quadMeetings = getFormData(form)
 
-    """mods = []
-    booksellers = []
-    weekDays = []
-    hoursLeft = {}
-    openCount = {}
-    closeCount = {}
-    lastWeek = {}
-    nextWeek = {}
-    schedule = {}
-    scheduleRating = [0]
-
-    params = {  'weekDays': weekDays,
-                'employees': employees, 
-                'mods': mods,
-                'booksellers': booksellers,
+    params = {  'employees': employees,
                 'vacationRequests': vacationRequests,
                 'shiftRequests': shiftRequests,
                 'recurringShiftRequests': recurringShiftRequests,
-                'hoursLeft': hoursLeft,
-                'openCount': openCount,
-                'closeCount': closeCount,
-                'lastWeek': lastWeek,
-                'nextWeek': nextWeek,
                 'schedules': schedules,
-                'schedule': schedule,
-                'scheduleRating': scheduleRating,
+                'selectedDate': selectedDate,
+                'quadMeetings': quadMeetings
             }
 
-    #TEMPORARY - PLEASE FIX (add new schedule class for long term schedule storage)
-    #terminateShifts()
-
-    weekStart, weekEnd = initialize(selectedDate, **params)
-    scheduleA = createSchedule(weekStart, weekEnd, quadMeetings, **params)
-
-    print("SCHEDULE RATING: ", scheduleRating)
-    printSchedule(employees, schedule, hoursLeft, openCount, closeCount, selectedDate)
-
-    mods = []
-    booksellers = []
-    weekDays = []
-    hoursLeft = {}
-    openCount = {}
-    closeCount = {}
-    lastWeek = {}
-    nextWeek = {}
-    schedule = {}
-    scheduleRating = [0]
-
-    params = {  'weekDays': weekDays,
-                'employees': employees, 
-                'mods': mods,
-                'booksellers': booksellers,
-                'vacationRequests': vacationRequests,
-                'shiftRequests': shiftRequests,
-                'recurringShiftRequests': recurringShiftRequests,
-                'hoursLeft': hoursLeft,
-                'openCount': openCount,
-                'closeCount': closeCount,
-                'lastWeek': lastWeek,
-                'nextWeek': nextWeek,
-                'schedules': schedules,
-                'schedule': schedule,
-                'scheduleRating': scheduleRating,
-            }
-
-    weekStart, weekEnd = initialize(selectedDate, **params)
-    scheduleB = createSchedule(weekStart, weekEnd, quadMeetings, **params)
-
-    print ("SCHEDULE RATING: ", scheduleRating)
-    printSchedule(employees, schedule, hoursLeft, openCount, closeCount, selectedDate)
-
-    mods = []
-    booksellers = []
-    weekDays = []
-    hoursLeft = {}
-    openCount = {}
-    closeCount = {}
-    lastWeek = {}
-    nextWeek = {}
-    schedule = {}
-    scheduleRating = [0]
-
-    params = {  'weekDays': weekDays,
-                'employees': employees, 
-                'mods': mods,
-                'booksellers': booksellers,
-                'vacationRequests': vacationRequests,
-                'shiftRequests': shiftRequests,
-                'recurringShiftRequests': recurringShiftRequests,
-                'hoursLeft': hoursLeft,
-                'openCount': openCount,
-                'closeCount': closeCount,
-                'lastWeek': lastWeek,
-                'nextWeek': nextWeek,
-                'schedules': schedules,
-                'schedule': schedule,
-                'scheduleRating': scheduleRating,
-            }
-
-    weekStart, weekEnd = initialize(selectedDate, **params)
-    scheduleC = createSchedule(weekStart, weekEnd, quadMeetings, **params)
-
-    print("SCHEDULE RATING: ", scheduleRating)
-    printSchedule(employees, schedule, hoursLeft, openCount, closeCount, selectedDate)
-    """
+    # Number of schedules to be generated and compared
     regenerate = 10
 
-    schedule, scheduleRating, weekStart =   generatePotentialSchedule( employees,
-                                            vacationRequests, shiftRequests, 
-                                            recurringShiftRequests, schedules, 
-                                            selectedDate, quadMeetings)
+    # Based on how many shifts the scheduler is not able to fill. 0 is optimal
+    scheduleRating = [100]
+
     for i in range(0, regenerate):
+        # If schedule is already optimal, no need to generate any more schedules
         if scheduleRating[0]==0:
             break
-        print "Regenerating schedule"
-        tempSchedule, tempScheduleRating, weekStart = generatePotentialSchedule(employees,
-                                                vacationRequests, shiftRequests, 
-                                                recurringShiftRequests, schedules, 
-                                                selectedDate, quadMeetings)
-        print("New schedule rating: ", tempScheduleRating)
+        print "---------------Generating Schedule #", i+1, "------------------"
+        # Generate a potential schedule
+        tempSchedule, tempScheduleRating, weekStart = generateSchedule(**params)
+        print "New schedule rating:", tempScheduleRating[0]
+        # IF generated schedule is better, it replaces the old one
         if tempScheduleRating < scheduleRating:
             schedule = tempSchedule
-            scheduleRating = tempScheduleRating
-            print "Saving new schedule"
-        else:
-            print "Throwing out new schedule"
+            scheduleRating[0] = tempScheduleRating[0]
 
     saveSchedule(weekStart, employees, schedule)
-    print("Final schedule rating", scheduleRating)
-    #printSchedule(employees, schedule, hoursLeft, openCount, closeCount, selectedDate)
-    return schedule
-
-    #TEMPORARY - PLEASE FIX
-    #terminateShifts()
+    print "Final schedule rating:", scheduleRating[0]
+    printSchedule(employees, schedule, selectedDate)
