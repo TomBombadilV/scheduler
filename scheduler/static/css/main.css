@@ -559,9 +559,9 @@ body.employees .subtitle {
     /*font-family: Pier Sans, arial;*/
 }
 
-.button-row {
+#employee-button-row {
     margin: 0 auto;
-    margin-top: 40px;
+    margin-top: 20px;
     text-align: center !important;
 }
 
