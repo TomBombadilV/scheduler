@@ -35,11 +35,6 @@
     display: inline-block;
 }
 
-.bold {
-    font-weight: 800;
-    color: #555;
-}
-
 /* ------------------------ Login Bar ------------------------- */
 #login-bar {
     /*background-color: #F6F7FB;*/

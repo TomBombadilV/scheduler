@@ -147,26 +147,14 @@
                     'delete-button schedule-button' type='submit' onclick=\
                     'return confirm('Delete Schedule?');'><img src=\
                     '{% static 'img/delete.png' %}'/></button>";
-                {% if weekSchedule.employee in mods %}
-                    $scheduleTable.innerHTML += "<tr><td>{{ weekSchedule.employee }}\
-                        </td><td class='bold'>{{ weekSchedule.get_mondayShift_display }}\
-                        </td><td class='bold'>{{ weekSchedule.get_tuesdayShift_display }}\
-                        </td><td class='bold'>{{ weekSchedule.get_wednesdayShift_display }}\
-                        </td><td class='bold'>{{ weekSchedule.get_thursdayShift_display }}\
-                        </td><td class='bold'>{{ weekSchedule.get_fridayShift_display }}\
-                        </td><td class='bold'>{{ weekSchedule.get_saturdayShift_display }}\
-                        </td><td class='bold'>{{ weekSchedule.get_sundayShift_display }}\
-                        </td></tr>";
-                {% else %}
-                    $scheduleTable.innerHTML += "<tr><td>{{ weekSchedule.employee }}\
-                        </td><td class='schedule-td'>{{ weekSchedule.get_mondayShift_display }}</td><td>\
-                        {{ weekSchedule.get_tuesdayShift_display }}</td><td>\
-                        {{ weekSchedule.get_wednesdayShift_display }}</td><td>\
-                        {{ weekSchedule.get_thursdayShift_display }}</td><td>\
-                        {{ weekSchedule.get_fridayShift_display }}</td><td>\
-                        {{ weekSchedule.get_saturdayShift_display }}</td><td>\
-                        {{ weekSchedule.get_sundayShift_display }}</td></tr>";
-                {% endif %}
+                $scheduleTable.innerHTML += "<tr><td>{{ weekSchedule.employee }}\
+                    </td><td class='schedule-td'>{{ weekSchedule.get_mondayShift_display }}</td><td>\
+                    {{ weekSchedule.get_tuesdayShift_display }}</td><td>\
+                    {{ weekSchedule.get_wednesdayShift_display }}</td><td>\
+                    {{ weekSchedule.get_thursdayShift_display }}</td><td>\
+                    {{ weekSchedule.get_fridayShift_display }}</td><td>\
+                    {{ weekSchedule.get_saturdayShift_display }}</td><td>\
+                    {{ weekSchedule.get_sundayShift_display }}</td></tr>";
             }
         {%endfor%}
         // If there are no relevant weekSchedules, don't display schedule
