@@ -1,11 +1,14 @@
 <div class="container" id="menu-container">
     <div class="row">
         <div class="col-xs-12 center-block text-center">
+            {% load staticfiles %}
+            <a href="#" id="menu-icon"><img src="{% static 'img/menu.png' %}"/></a>
             <ul id="menu">
                 <li class="menu-item generate"><a href="{% url 'scheduler:index' %}">Create Schedule</a></li>
                 <li class="menu-item employees"><a href="{% url 'scheduler:manage-employees' %}">Manage Employees</a></li>
                 <li class="menu-item requests"><a href="{% url 'scheduler:requests' %}">Shift / Vacation Requests</a></li>
                 <li class="menu-item schedules"><a href="{% url 'scheduler:schedules' %}">View Schedules</a></li>
+                <li class="menu-item menu-logout"><a href="/logout">Log Out</a></li>
             </ul>
         </div>
     </div>

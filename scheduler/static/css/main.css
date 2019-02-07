@@ -136,6 +136,18 @@
 }
 
 /* ------------------------ Menu ------------------------- */
+#menu-icon {
+    display: none;
+    float: right;
+    margin-top: 15px;
+    opacity: 0.8;
+}
+
+#menu-icon img {
+    height: 25px;
+    width: 25px;
+}
+
 #menu-container {
     height: 60px;
     line-height: 60px;
@@ -146,9 +158,6 @@
     text-transform: uppercase;
     font-size: 10px;
     letter-spacing: 1px;
-    /*width: 50%;
-    margin: 0 auto;*/
-    /*margin-top: 25px;*/
 }
 
 .menu-item {
@@ -178,6 +187,12 @@
     -o-transition: all 0.2s ease-out;
     transition: all 0.2s ease-out;
 }
+
+.menu-logout {
+    display: none;
+}
+
+/* --------------- General Stuff -------------------*/
 
 body.generate #menu .menu-item.generate a,
 body.employees #menu .menu-item.employees a,
@@ -559,6 +574,11 @@ body.employees .subtitle {
     /*font-family: Pier Sans, arial;*/
 }
 
+.button-row {
+    text-align: center !important;
+    margin-top: 20px;
+}
+
 #employee-button-row {
     margin: 0 auto;
     margin-top: 20px;
@@ -806,7 +826,7 @@ body.requests .subtitle {
 
 
 
-/* ------------------------ Footer ------------------------- */
+/* -------------------------------- Footer --------------------------------- */
 #footer-container {
     height: 60px;
     line-height: 60px;
@@ -825,3 +845,138 @@ body.requests .subtitle {
     color: #909090;
 }
 
+/* ----------------------------- MEDIA QUERIES ----------------------------- */
+@media only screen and (max-width: 992px) {
+    #menu-icon {
+        display: inline-block;
+    }
+
+    #menu {
+        visibility: hidden;
+        opacity: 0;
+        position: absolute;
+        right: 0;
+        background-color: rgba(255,255,255,1);
+        border: 3px solid #1BD290;
+        border-radius: 5px;
+        z-index: 100;
+        margin-top: 40px;
+
+        -webkit-transition: visibility 0s, opacity 0.3s linear;
+        -moz-transition: visibility 0s, opacity 0.3s linear;
+        -o-transition: visibility 0s, opacity 0.3s linear;
+        transition: visibility 0s, opacity 0.3s linear;
+    }
+
+    #menu li {
+        display: block;
+    }
+
+    #menu-container:hover #menu {
+        visibility: visible;
+        opacity: 1;
+    }
+
+    .menu-logout {
+        display: block;
+    }
+
+    #login-bar {
+        display: none;
+    }
+
+    #footer-container {
+        display: none;
+    }
+
+    .employee-div {
+        width: 95%;
+    }
+
+    #add-employee-form .row, #add-employee-form hr {
+        width: 100%;
+    }
+
+    .model-form-background {
+        width: 65%;
+    }
+
+    #request-div .col-xs-8,
+    #request-div .col-xs-4 {
+        width: 100%;
+        margin: 0 auto;
+    }
+
+    #button-row {
+        margin-top: 10px;
+    }
+
+    .schedule-width {
+        width: auto;
+    }
+}
+
+
+@media only screen and (max-width: 815px) {
+    .schedule-width {
+        width: 100%;
+    }
+}
+
+@media only screen and (max-width: 675px) {
+    .schedule-width {
+        width: 100%;
+    }
+
+    body.generate .page-title, body.schedules .page-title {
+        letter-spacing: 3px;
+    }
+
+    .page-title {
+        font-size: 30px;
+    }
+
+    .sub-page-title {
+        font-size: 20px;
+    }
+
+    .subtitle {
+        font-size: 15px;
+    }
+
+    #week-div label {
+        font-size: 12px;
+    }
+
+    .meeting-div {
+        width: 80%;
+    }
+
+    tr {
+        font-size: 10px;
+    }
+
+    .schedule-table td {
+        padding: 2px 5px;
+    }
+
+    .employee-div {
+        padding: 15px 40px;
+    }
+
+    body.generate th, body.employees th, body.requests th {
+        font-size: 10px;
+    }
+
+    #quad-div h3 {
+        font-size: 10px;
+    }
+
+    #quad-div li {
+        font-size: 10px;
+    }
+
+    .model-form-background {
+        width: 80%;
+    }
+}
