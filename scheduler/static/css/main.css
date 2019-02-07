@@ -862,10 +862,11 @@ body.requests .subtitle {
         z-index: 100;
         margin-top: 40px;
 
-        -webkit-transition: visibility 0s, opacity 0.3s linear;
-        -moz-transition: visibility 0s, opacity 0.3s linear;
-        -o-transition: visibility 0s, opacity 0.3s linear;
-        transition: visibility 0s, opacity 0.3s linear;
+        /* Make sure menu doesn't fade away slowly on window resize */
+        -webkit-transition: visibility 0s, opacity 0.3s linear, background-color 0.3s linear, border 0.3s linear;
+        -moz-transition: visibility 0s, opacity 0.3s linear, background-color 0.3s linear, border 0.3s linear;
+        -o-transition: visibility 0s, opacity 0.3s linear, background-color 0.3s linear, border 0.3s linear;
+        transition: visibility 0s, opacity 0.3s linear, background-color 0.3s linear, border 0.3s linear;
     }
 
     #menu li {
