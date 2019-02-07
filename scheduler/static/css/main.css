@@ -99,6 +99,11 @@
     padding: 7px 10px;
 }
 
+
+#logged-out-container {
+    margin-top: 25vh;
+}
+
 /* ------------------------ Login Page ------------------------- */
 
 #login-button {
@@ -115,6 +120,11 @@
     height: 375px;
     margin: 0 auto;
     margin-top: 250px;
+
+    background-color: white;
+    border-radius: 0px;
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
 }
 
 #login-div .page-title {
