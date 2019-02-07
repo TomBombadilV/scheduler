@@ -1,11 +1,11 @@
 {% include "scheduler/base.html" %}
 
 <body>
-    <div class="container">
+    <div class="container" id="logged-out-container">
         <div class="row">
             <div class="col-xs-12 center-block text-center">
                 <h4 class="page-title">Logged out!</h4>  
-                <a href="{% url 'login'%}">Click here to login again.</a>
+                <a href="{% url 'login'%}" class="submit-button">Log back in</a>
             </div><!--col-12-->
         </div><!--row-->
     </div><!--container-->

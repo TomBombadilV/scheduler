@@ -592,7 +592,7 @@ body.employees .subtitle {
 }
 
 #quad-div {
-    /*margin-bottom: 75px;*/
+    margin-bottom: 75px;
     margin-top: 45px;
 }
 
@@ -847,6 +847,14 @@ body.requests .subtitle {
 
 /* ----------------------------- MEDIA QUERIES ----------------------------- */
 @media only screen and (max-width: 992px) {
+    #login-top {
+        margin-top: 200px;
+    }
+
+    #logged-out-container {
+        margin-top: 30vh;
+    }
+
     #menu-icon {
         display: inline-block;
     }
@@ -857,16 +865,15 @@ body.requests .subtitle {
         position: absolute;
         right: 0;
         background-color: rgba(255,255,255,1);
-        border: 3px solid #1BD290;
+        border: 3px solid white;
         border-radius: 5px;
         z-index: 100;
         margin-top: 40px;
 
-        /* Make sure menu doesn't fade away slowly on window resize */
-        -webkit-transition: visibility 0s, opacity 0.3s linear, background-color 0.3s linear, border 0.3s linear;
-        -moz-transition: visibility 0s, opacity 0.3s linear, background-color 0.3s linear, border 0.3s linear;
-        -o-transition: visibility 0s, opacity 0.3s linear, background-color 0.3s linear, border 0.3s linear;
-        transition: visibility 0s, opacity 0.3s linear, background-color 0.3s linear, border 0.3s linear;
+        -webkit-transition: visibility 0.3s, opacity 0.3s linear, background-color 0.3s linear, border 0.3s linear;
+        -moz-transition: visibility 0.3s, opacity 0.3s linear, background-color 0.3s linear, border 0.3s linear;
+        -o-transition: visibility 0.3s, opacity 0.3s linear, background-color 0.3s linear, border 0.3s linear;
+        transition: visibility 0.3s, opacity 0.3s linear, background-color 0.3s linear, border 0.3s linear;
     }
 
     #menu li {
@@ -876,6 +883,8 @@ body.requests .subtitle {
     #menu-container:hover #menu {
         visibility: visible;
         opacity: 1;
+        border: 3px solid #1BD290;
+
     }
 
     .menu-logout {
@@ -884,6 +893,17 @@ body.requests .subtitle {
 
     #login-bar {
         display: none;
+    }
+
+    .make-full-page {
+        min-height: auto;
+        height: auto;
+        margin-bottom: 0px;
+        margin-top: 0px;
+    }
+
+    .page-title {
+        margin-top: 40px;
     }
 
     #footer-container {
