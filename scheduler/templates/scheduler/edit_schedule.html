@@ -9,32 +9,34 @@
             <div class="row">
                 <div class="col-xs-12">
                     <h4 class="sub-page-title page-top center-block text-center">Edit Schedule for the Week of {{ date | date:'M d, Y'}}</h4>
-                    <table class="schedule-table">
-                        <thead>
-                            {% load custom_tags %}
-                            <th>Employee</th>
-                            <th>Monday <br>  {{ date | date:'m/d' }}</th>
-                            <th>Tuesday <br> {{ date | plus_days:1 | date:'m/d' }}</th>
-                            <th>Wednesday<br>{{ date | plus_days:2 | date:'m/d' }}</th>
-                            <th>Thursday <br>{{ date | plus_days:3 | date:'m/d' }}</th>
-                            <th>Friday <br>  {{ date | plus_days:4 | date:'m/d' }}</th>
-                            <th>Saturday <br>{{ date | plus_days:5 | date:'m/d' }}</th>
-                            <th>Sunday <br>  {{ date | plus_days:6 | date:'m/d' }}</th>
-                        </thead>
-                    {% for form in formset %}
-                        <tr>
-                            {{ form.id }}
-                            <td class="read-only-field">{{ form.employee }}</td>
-                            <td>{{ form.mondayShift }}</td>
-                            <td>{{ form.tuesdayShift }}</td>
-                            <td>{{ form.wednesdayShift }}</td>
-                            <td>{{ form.thursdayShift }}</td>
-                            <td>{{ form.fridayShift }}</td>
-                            <td>{{ form.saturdayShift }}</td>
-                            <td>{{ form.sundayShift }}</td>
-                        </tr>
-                    {% endfor %}
-                    </table>
+                    <div class="schedule-container" id="edit-schedule-container">
+                        <table class="schedule-table">
+                            <thead>
+                                {% load custom_tags %}
+                                <th>Employee</th>
+                                <th>Monday <br>  {{ date | date:'m/d' }}</th>
+                                <th>Tuesday <br> {{ date | plus_days:1 | date:'m/d' }}</th>
+                                <th>Wednesday<br>{{ date | plus_days:2 | date:'m/d' }}</th>
+                                <th>Thursday <br>{{ date | plus_days:3 | date:'m/d' }}</th>
+                                <th>Friday <br>  {{ date | plus_days:4 | date:'m/d' }}</th>
+                                <th>Saturday <br>{{ date | plus_days:5 | date:'m/d' }}</th>
+                                <th>Sunday <br>  {{ date | plus_days:6 | date:'m/d' }}</th>
+                            </thead>
+                        {% for form in formset %}
+                            <tr>
+                                {{ form.id }}
+                                <td class="read-only-field">{{ form.employee }}</td>
+                                <td>{{ form.mondayShift }}</td>
+                                <td>{{ form.tuesdayShift }}</td>
+                                <td>{{ form.wednesdayShift }}</td>
+                                <td>{{ form.thursdayShift }}</td>
+                                <td>{{ form.fridayShift }}</td>
+                                <td>{{ form.saturdayShift }}</td>
+                                <td>{{ form.sundayShift }}</td>
+                            </tr>
+                        {% endfor %}
+                        </table>
+                    </div>
                 </div><!--col-12-->
             </div><!--row-->
             <div class="row">

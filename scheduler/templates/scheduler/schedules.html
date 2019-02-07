@@ -39,7 +39,7 @@
                 </div><!--col-xs-12-->
             </form>
             {% if currSchedules %}
-            <div id="schedule-container" style="width:100%;">
+            <div class="schedule-container">
                 <table id="schedule-table-original" class="schedule-table schedule-width">
                     <tr>
                         {% load custom_tags %}
@@ -69,7 +69,7 @@
                 </table>
             </div><!--overflow-container-->
             {% else %}
-                <div id="schedule-container" style="width:100%;">
+                <div class="schedule-container">
                     <table id="schedule-table-original" class="schedule-table schedule-width">
                         <thead class="no-border"><th class="no-border"><p class="warning-text">No schedule has been generated for this week.</p></th></thead>
                         <tr><td class="no-border"><a class="submit-button" href="{% url 'scheduler:index' %}">Generate</a></td></tr>

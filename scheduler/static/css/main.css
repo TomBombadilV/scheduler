@@ -321,6 +321,7 @@ body.requests th {
 tr {
     font-family: Gotham, Arial, sans-serif;
     font-size: 12px;
+    line-height: 18px;
     font-weight: 100;
     letter-spacing: 0.5px;
 }
@@ -632,6 +633,7 @@ body.employees .subtitle {
 
 #request-div {
     margin-top: 25px;
+    max-width: 80%;
 }
 
 #request-div .subtitle {
@@ -846,9 +848,30 @@ body.requests .subtitle {
 }
 
 /* ----------------------------- MEDIA QUERIES ----------------------------- */
+
+@media only screen and (max-width: 1200px) {
+    #request-div {
+        max-width: max-content;
+    }
+}
+
 @media only screen and (max-width: 992px) {
-    #login-top {
-        margin-top: 200px;
+    #login-div {
+        margin-top: 20vh;
+        width: 80%;
+    }
+
+    #login-div label {
+        font-size: 12px;
+    }
+
+    #id_username, #id_password {
+        padding: 3px 5px;
+        font-size: 12px;
+    }
+
+    #login-button {
+        padding: 10px 45px;
     }
 
     #logged-out-container {
@@ -904,6 +927,10 @@ body.requests .subtitle {
 
     .page-title {
         margin-top: 40px;
+    }
+
+    #generate-button {
+        margin-bottom: 30px;
     }
 
     #footer-container {
@@ -1000,4 +1027,52 @@ body.requests .subtitle {
     .model-form-background {
         width: 80%;
     }
+
+    .schedule-container {
+        border: 1px solid #ccc;
+        max-width: 90%;
+        overflow-x: scroll;
+        margin: 0 auto;
+        margin-bottom: 30px;
+    }
+
+    #edit-schedule-container {
+        max-width: 100%;
+    }
+
+    #schedule-table-original {
+        margin-bottom: 0px;
+    }
+
+    .schedule-table {
+        margin-bottom: 0px;
+    }
+}
+
+@media only screen and (max-width: 375px) {
+    .page-title {
+        font-size: 27px;
+        letter-spacing: 0.5px;
+    }
+
+    .fc-icon, .fc-toolbar .fc-center {
+        margin-top: 20px;
+    }
+
+    #request-div {
+        margin-top: 0px;
+    }
+
+    #week-start {
+        font-size: 12px;
+    }
+
+    #oval-div {
+        width: auto;
+    }
+
+    .page-top {
+        margin-top: 30px;
+    }
+
 }
