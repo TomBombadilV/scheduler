@@ -1,6 +1,6 @@
 # Scheduler
 
-This is a Django application designed to automate the scheduling process for particular retail shifts. 
+This is a Django application designed to automate the scheduling process for retail shifts with particular rules and constraints. 
 
 ### Constraints
 Almost all of the relevant logic is located in [schedulerLogic.py](https://github.com/TomBombadilV/scheduler/blob/master/scheduler/schedulerLogic.py). 
@@ -27,6 +27,6 @@ The application also uses Django's built in user authentication system to allow 
 ### Usage
 Make sure you have [Django](https://www.djangoproject.com/download/) installed.<br>
 In main project directory:<br>
-`python manage.py makemigrations`<br>
-`python manage.py migrate`<br>
-`python manage.py runserver`
+`python manage.py makemigrations
+python manage.py migrate
+python manage.py runserver`
