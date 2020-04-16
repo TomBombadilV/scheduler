@@ -1,4 +1,5 @@
 db.sqlite3
+scheduler/*.pyc
 scheduler/migrations/*
 *.pyc
 scheduler/static/img/calendar-7.png
