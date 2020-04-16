@@ -1,5 +1,4 @@
 # Scheduler
-A Django schedule generator -
 
 This is a Django application designed to automate the scheduling process for particular retail shifts. The following constraints were implemented:
 1. All employees must work their full assigned hours every week
@@ -11,10 +10,12 @@ This is a Django application designed to automate the scheduling process for par
 7. Every closing shift must have one MOD and three regular staff
 8. All of these constraints must be held from week to week
 
+---
+
 There are four main sections in the application:
 * A page to set parameters for the generated schedule
 * A page to add, remove, or modify employee information
-* A page to input shift and vacation requests
+* A page to add, remove, or modify shift and vacation requests
 * A page to view, edit, and delete generated schedules
 
 The application also uses Django's built in user authentication system to allow different permissions for different users so that managers can create and edit schedules while employees can view them.
