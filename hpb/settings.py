@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 import os
-from passwords import GITHUB_SECRET_KEY
+#from passwords import GITHUB_SECRET_KEY
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -21,7 +21,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = GITHUB_SECRET_KEY
+#SECRET_KEY = GITHUB_SECRET_KEY
+SECRET_KEY = 'q7-%+cf7=ylkv3!s=jfry0u6$x-6n90lm_crt(byxqmi*^hi_*'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True

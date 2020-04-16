@@ -97,42 +97,6 @@ class TempSchedule(models.Model):
     saturdayShift = models.CharField(max_length=15, default="", choices=SHIFT_CHOICES)
     sundayShift = models.CharField(max_length=15, default="", choices=SHIFT_CHOICES)
 
-"""
-class Shift(models.Model):
-    employee = models.ForeignKey(Employee, default="", on_delete=models.CASCADE)
-    shift = models.CharField(max_length=15, choices=SHIFT_CHOICES)
-    weekDay = models.CharField(default="M", max_length=10, choices=WEEKDAY_CHOICES)
-
-    def __str__(self):
-        return self.employee.firstName + ", " + self.weekDay + ", " + self.shift
-
-    def setShift(self, shift):
-        self.shift = shift
-    '''
-    def previousShift(self):
-        previousShift = -1
-        #print "HERE", self.weekDay, WEEKDAY_CHOICES[1][0]
-        #print self.weekDay == WEEKDAY_CHOICES[1][0]
-        if self.weekDay=="M":
-            previousShift="LSu"
-        elif self.weekDay=="T":
-            previousShift="M"
-        elif self.weekDay=="W":
-            previousShift="T"
-        elif self.weekDay=="Th":
-            previousShift="W"
-        elif self.weekDay=="F":
-            previousShift="Th"
-        elif self.weekDay=="Sa":
-            previousShift="F"
-        elif self.weekDay=="Su":
-            previousShift="Sa"
-        else:
-            print("Not a valid weekday")
-        return self.employee.shift_set.get(weekDay=previousShift)
-    '''
-"""
-
 class Request(models.Model):
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
 

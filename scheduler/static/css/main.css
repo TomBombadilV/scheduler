@@ -643,7 +643,7 @@ body.employees .subtitle {
 
 #request-div {
     margin-top: 25px;
-    max-width: 80%;
+    /*max-width: 90%;*/
 }
 
 #request-div .subtitle {
@@ -858,10 +858,16 @@ body.requests .subtitle {
 }
 
 /* ----------------------------- MEDIA QUERIES ----------------------------- */
+@media only screen and (max-width: 815px) {
+    .schedule-width {
+        width: 100%;
+    }
+}
 
 @media only screen and (max-width: 1200px) {
     #request-div {
         max-width: max-content;
+        max-width: 80%;
     }
 }
 
@@ -974,13 +980,6 @@ body.requests .subtitle {
     }
 }
 
-
-@media only screen and (max-width: 815px) {
-    .schedule-width {
-        width: 100%;
-    }
-}
-
 @media only screen and (max-width: 675px) {
     .schedule-width {
         width: 100%;
@@ -1038,6 +1037,10 @@ body.requests .subtitle {
         width: 80%;
     }
 
+    #week-start {
+        font-size: 12px;
+    }
+
     .schedule-container {
         border: 1px solid #ccc;
         max-width: 90%;
@@ -1060,9 +1063,28 @@ body.requests .subtitle {
 }
 
 @media only screen and (max-width: 375px) {
+    #login-div {
+        margin-top: 20vh;
+        height: auto;
+        padding: 20px 0px;
+    }
+
+    #login-div label {
+        font-size: 10px;
+    }
+
+    #login-button {
+        margin-bottom: 0px;
+    }
+    
+    #id_currentWeek {
+        padding: 5px 0px;
+        margin-left: 0px;
+    }
     .page-title {
-        font-size: 27px;
+        font-size: 30px;
         letter-spacing: 0.5px;
+        line-height: 40px;
     }
 
     .fc-icon, .fc-toolbar .fc-center {
@@ -1077,8 +1099,14 @@ body.requests .subtitle {
         font-size: 12px;
     }
 
+    #next-week img, 
+    #prev-week img {
+        width: 11px;
+    }
+
     #oval-div {
         width: auto;
+        padding: 10px 0px;
     }
 
     .page-top {

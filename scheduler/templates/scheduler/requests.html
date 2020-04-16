@@ -25,12 +25,13 @@ $(document).ready(function() {
       /*eventColor: '#119666',*/
       eventColor: '#1e7353',
       events: [
+        {% load custom_tags %}
         {% for request in vacation_request_list %}
         {
           title: '{{ request.employee }} (Vacation)',
           start: '{{ request.startDate|date:"Y-m-d" }}',
           // Have to do some weird stuff because full calendar is glitchy
-          end: '{{ request.endDate|date:"Y-m" }}'+'-'+'{{request.endDate.day|add:"1"}}'
+          end: '{{ request.endDate | plus_days:1 | date:"Y-m-d" }}'
         },
         {% endfor %}
         {% for request in shift_request_list %}

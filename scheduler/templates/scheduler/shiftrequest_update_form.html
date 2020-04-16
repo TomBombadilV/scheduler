@@ -15,7 +15,7 @@
                         <h4 class="sub-page-title page-top">Edit Shift Request</h4>
                     </div><!--col-->
                     <div class="col-xs-12 text-center model-form">
-                        <form action="{% url 'scheduler:shift-request' %}" method="POST">
+                        <form method="POST">
                         {% csrf_token %}
                             <div class="row">
                                 <div class="col-xs-12 text-center">
@@ -48,5 +48,9 @@
 {% include "scheduler/footer.html" %}
 
 <script>
+    // Format date
+    date = $('#id_date').val().split("-");
+    $('#id_date').val(date[1]+'/'+date[2]+'/'+date[0]);
+
     $("#id_date").datepicker({firstDay:1});
 </script>

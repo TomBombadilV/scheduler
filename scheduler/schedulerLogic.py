@@ -145,6 +145,7 @@ def initRequests(employees, vacationRequests, shiftRequests,
                     schedule[request.employee][weekday] = "V"
                     currShift = "V"
                     hoursLeft[request.employee]-=7
+                    print(currDate, hoursLeft[request.employee])
 
     for request in shiftRequests:
         # Request occurs during selected week
@@ -203,6 +204,7 @@ def initialize(selectedDate, weekDays, employees, mods, booksellers,
     initRequests(employees, vacationRequests, shiftRequests, 
                  recurringShiftRequests, weekStart, weekEnd, hoursLeft, 
                  schedule)
+    print(hoursLeft)
     initSurroundingShifts(employees, schedules, lastWeek, nextWeek, weekStart)
     return weekStart, weekEnd
 
@@ -480,6 +482,8 @@ def selectShiftCrew(day, shift, employees, mods, booksellers, schedule,
     # Calculate probability array of how likely each employee is to be selected 
     # for this shift based on how many times they have already worked it
     sortedMods, pModArr = calculateProbability(mods, shiftCount)
+    # Temporary fix because None is getting appended to bookseller array for some reason
+    booksellers = [b for b in booksellers if b]
     sortedBooksellers, pBooksellerArr = calculateProbability(   booksellers, 
                                                                 shiftCount )
 
@@ -617,35 +621,25 @@ def createSchedule(weekStart, weekEnd, quadMtngs, weekDays, employees, mods,
         # Number of MODs and Booksellers that need to be scheduled for closing
         numModsClosing, numBooksellersClosing = 1, 3
 
-        # Paul can't open I guess?
-        paul = None
-        for bookseller in booksellers:
-            if bookseller.firstName=="Paul" and bookseller.lastName=="Shirley":
-                paul = bookseller
-                booksellers.remove(bookseller)
-
         # Select opening crew
         selectShiftCrew(day, day.openingShift, employees, mods, booksellers, 
                         schedule, lastWeek, nextWeek, openCount, hoursLeft, 
                         numModsOpening, numBsOpening, scheduleRating)
 
-        # Reinstate Paul
-        booksellers.append(paul)
-
         # Carolyn doesn't want to close
-        carolyn = None
+        """carolyn = None
         for bookseller in booksellers:
             if bookseller.firstName=="Carolyn" and bookseller.lastName=="Chan":
                 carolyn = bookseller
-                booksellers.remove(bookseller)
+                booksellers.remove(bookseller)"""
 
         # Select closing crew
         selectShiftCrew(day, day.closingShift, employees, mods, booksellers,
                         schedule, lastWeek, nextWeek, closeCount, hoursLeft,
                         numModsClosing, numBooksellersClosing, scheduleRating)
 
-        # Reinstate Carolyn
-        booksellers.append(carolyn)
+        """# Reinstate Carolyn
+        booksellers.append(carolyn)"""
 
     # Reversed because weekend days have priority
     for day in reversed(weekDays):

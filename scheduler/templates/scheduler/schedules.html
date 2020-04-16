@@ -83,7 +83,9 @@
 
 <script type="text/javascript">
     // Turn monday into javascript date
-    var monday = new Date({{ monday.year }}, {{monday.month}}-1, {{monday.day}});
+    //var monday = new Date({{ monday.year }}, {{monday.month}}-1, {{monday.day}});
+    var monday = $('#oval-div').val();
+    monday = new Date(Date.parse(monday));
 
     // Previous week button
     $("#prev-week").on('click',function(){

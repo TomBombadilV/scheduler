@@ -47,6 +47,12 @@
 
 {% include "scheduler/footer.html" %}
 <script>
+    // Format start and end dates
+    startDate = $('#id_startDate').val().split("-");
+    $('#id_startDate').val(startDate[1]+'/'+startDate[2]+'/'+startDate[0]);
+    endDate = $('#id_endDate').val().split("-");
+    $('#id_endDate').val(startDate[1]+'/'+endDate[2]+'/'+endDate[0]);
+
     $("#id_startDate").datepicker({firstDay:1});
     $('#id_endDate').datepicker({firstDay:1});
 </script>

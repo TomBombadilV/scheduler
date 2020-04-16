@@ -48,5 +48,9 @@
 {% include "scheduler/footer.html" %}
 
 <script>
+    // Format date
+    date = $('#id_date').val().split("-");
+    $('#id_date').val(date[1]+'/'+date[2]+'/'+date[0]);
+
     $("#id_date").datepicker({firstDay:1});
 </script>
