@@ -14,7 +14,6 @@ The following constraints were implemented:
 7. Every closing shift must have one MOD and three regular staff
 8. All of these constraints must be held from week to week
 
-<br>
 
 ### Interface Layout
 There are four main sections in the application:
@@ -24,3 +23,10 @@ There are four main sections in the application:
 * A page to view, edit, and delete generated schedules
 
 The application also uses Django's built in user authentication system to allow different permissions for different users so that managers can create and edit schedules while employees can view them.
+
+### Usage
+Make sure you have [Django](https://www.djangoproject.com/download/) installed.
+In main project directory:
+`python manage.py makemigrations`
+`python manage.py migrate`
+`python manage.py runserver`
