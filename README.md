@@ -27,6 +27,6 @@ The application also uses Django's built in user authentication system to allow 
 ### Usage
 Make sure you have [Django](https://www.djangoproject.com/download/) installed.<br>
 In main project directory:<br>
-`python manage.py makemigrations
-python manage.py migrate
-python manage.py runserver`
+`python manage.py makemigrations`<br>
+`python manage.py migrate`<br>
+`python manage.py runserver`
